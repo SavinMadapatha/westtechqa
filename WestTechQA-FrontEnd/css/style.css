@@ -99,7 +99,6 @@ body {
 
 .nav-link {
   margin-right: 1rem;
-  text-decoration: none;
   color: #333;
 }
 
@@ -108,29 +107,74 @@ body {
 }
 
 .search-bar input[type="search"] {
+  background-color: #fff;
   padding: 0.5rem;
+  width: 250px;
   margin-right: 0.5rem;
   border: 1px solid #ddd;
+  border-radius: 3px;
 }
 
+/* Search Button Hover Effect */
 .search-bar button {
   padding: 0.5rem;
+  margin-right: 5rem;
   background-color: #007bff;
   border: none;
+  border-radius: 3px;
   color: white;
+  transition: background-color 0.3s, box-shadow 0.3s;
+  cursor: pointer;
 }
 
+.search-bar button:hover {
+  background-color: #0056b3;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+/* Login Button Hover Effect */
 .btn-login,
 .btn-register {
   padding: 0.5rem 1rem;
   margin-left: 1rem;
-  border: none;
-  background-color: #007bff;
-  color: white;
+  border-radius: 3px;
+  transition: background-color 0.3s, box-shadow 0.3s;
+  cursor: pointer;
 }
 
+.btn-login {
+  color: #007bff;
+  background-color: #fff;
+  border: 1px solid #007bff;
+}
+
+.btn-login:hover {
+  background-color: #e6f0ff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Register Button Hover Effect */
 .btn-register {
-  background-color: #28a745;
+  color: #fff;
+  background-color: #007bff;
+  border: none;
+}
+
+.btn-register:hover {
+  background-color: #0056b3;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.user-profile {
+  width: 40px;
+  height: 40px;
+  margin-right: 1rem;
+  cursor: pointer;
+  transition: transform 0.3s ease-in-out;
+}
+
+.user-profile:hover {
+  transform: scale(1.1);
 }
 
 /* login page styles */
@@ -305,4 +349,16 @@ header h1 {
 .question-item:hover {
   border-color: #ccc;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+/* Question Detail Page styles */
+
+.answer {
+  border-bottom: 1px solid #ccc;
+  padding: 10px 0;
+}
+
+.vote-count {
+  font-size: 1.5em;
+  color: #ff8c00; /* Example color */
 }

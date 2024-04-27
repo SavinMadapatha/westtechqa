@@ -55,10 +55,8 @@ $route['translate_uri_dashes'] = FALSE;
 
 $route['api/auth/register'] = 'AuthController/register';
 $route['api/auth/login'] = 'AuthController/login';
+$route['api/auth/session'] = 'AuthController/check_session';
 
 // General route for questions that handles both listing and creating depending on the HTTP method
 $route['api/questions'] = 'questions/index';
-
-// Route for specific question actions like view, update, and delete
-$route['api/questions/(:num)'] = 'questions/view/$1';
-
+$route['api/questions/(:num)'] = 'questions/get/$1';

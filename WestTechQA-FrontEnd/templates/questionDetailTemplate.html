@@ -1,0 +1,20 @@
+<script type="text/template" id="question-detail-template">
+    <h1><%= title %></h1>
+    <p><%= content %></p>
+    <div>
+        <h2>Answers:</h2>
+        <% _.each(answers, function(answer) { %>
+            <div>
+                <p><strong>Answered by:</strong> <%= answer.username %></p>
+                <p><strong>Date:</strong> <%= new Date(answer.posted_date).toLocaleDateString() %></p>
+                <p><%= answer.content %></p>
+                <p>Votes: <%= answer.votes %></p>
+            </div>
+        <% }); %>
+    </div>
+    <div>
+        <h3>Tags:</h3>
+        <p><%= tags.join(', ') %></p>
+    </div>
+    <button id="ask-question-btn">Ask Question</button>
+</script>

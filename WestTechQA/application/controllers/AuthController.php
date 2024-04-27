@@ -80,8 +80,17 @@ class AuthController extends CI_Controller {
             echo json_encode(['status' => 'success', 'message' => 'Login successful', 'user' => $user]);
         } else {
             // Return error response
-            $this->output->set_status_header(401); // HTTP status 401: Unauthorized
+            $this->output->set_status_header(401); 
             echo json_encode(['status' => 'error', 'message' => 'Login failed']);
+        }
+    }
+
+    public function check_session() {
+        log_message('debug', 'Session Data: ' . print_r($this->session->userdata(), true));
+        if ($this->session->userdata('logged_in')) {
+            echo json_encode(['status' => 'success', 'logged_in' => true]);
+        } else {
+            echo json_encode(['status' => 'error', 'logged_in' => false]);
         }
     }
 }

@@ -7,7 +7,7 @@ document.addEventListener('DOMContentLoaded', function () {
       sidebarMenu.classList.toggle('active');
     });
   
-    // Close the sidebar when clicking outside of it
+    // close the sidebar when clicking outside of it
     document.addEventListener('click', function (event) {
       if (!navbar.contains(event.target) && !sidebarMenu.contains(event.target) && sidebarMenu.classList.contains('active')) {
         sidebarMenu.classList.remove('active');

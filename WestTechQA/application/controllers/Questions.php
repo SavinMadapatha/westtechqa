@@ -24,12 +24,16 @@ class Questions extends CI_Controller {
 
     // GET: List all questions or view a single question
     public function get($id = NULL) {
+        $this->load->model('Question_model'); // Make sure to load the model
+    
         if ($id === NULL) {
-            $questions = $this->question_model->get_questions();
+            // If no ID is provided, fetch all questions
+            $questions = $this->Question_model->get_questions();
             $this->output->set_content_type('application/json')
                          ->set_output(json_encode($questions));
         } else {
-            $question = $this->question_model->get_question($id);
+            // If an ID is provided, fetch the detailed question view
+            $question = $this->Question_model->get_question_with_details($id);
             if (!$question) {
                 $this->output->set_status_header(404)
                              ->set_output(json_encode(['message' => 'Question not found']));

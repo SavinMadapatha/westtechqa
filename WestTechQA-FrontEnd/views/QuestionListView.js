@@ -1,56 +1,39 @@
 var QuestionListView = Backbone.View.extend({
-
     initialize: function() {
         this.collection = new QuestionsCollection();
-        this.loadTemplate();
+        this.listenTo(this.collection, 'sync', this.render);
+        this.collection.fetch({reset: true});
     },
 
-    loadTemplate: function() {
-        var self = this;
-        // Fetch the template HTML from an external file
-        $.get('templates/questionTemplate.html')
-            .done(function(data) {
-                // Ensure the template element is correctly found within the fetched data
-                var templateHtml = $("<div>").html(data).find('#question-template').html();
-                if (templateHtml) {
-                    self.template = _.template(templateHtml);
-                    self.listenTo(self.collection, 'sync', self.render);  
-                    self.collection.fetch({reset: true});  // Fetch the collection data
-                } else {
-                    console.error('Template content not found.');
-                }
-            })
-            .fail(function() {
-                console.error('Failed to load the questions template.');
-            });
+    events: {
+        'click .question-title a': 'navigateToDetail'
+    },
+
+    navigateToDetail: function(event) {
+        event.preventDefault();  
+        var questionId = $(event.currentTarget).data('id');
+        Backbone.history.navigate('questions/' + questionId, { trigger: true });
     },
 
     render: function() {
-        $('.custom-navbar').removeClass('login-page'); // removes the login-page class to show the default navbar
-        var self = this;
-        this.$el.empty(); // Clears the existing list
-
+        this.template = window.templates.questionTemplate; // Assign template during render
         if (!this.template) {
-            return this; // Exit if the template isn't loaded
+            console.error('Template not loaded.');
+            return this;
         }
 
         var questionData = this.collection.map(function(model) {
             var data = model.toJSON();
-
-            // Perform the date conversion here
             var isoDateStr = data.posted_date.replace(' ', 'T') + 'Z';
             var postedDate = new Date(isoDateStr);
-
-            // Replace data.posted_date with formatted date
             data.formattedDate = postedDate.toLocaleDateString();
-
+            data.dataId = model.get('question_id');
             return data;
         });
-
-        // Render the collection using the template
+        // var htmlOutput = this.template({ questions: questionData });
+        // console.log('HTML Output:', htmlOutput);
         this.$el.html(this.template({ questions: questionData }));
-
+        console.log('Rendered Question List View');
         return this;
     }
 });
-

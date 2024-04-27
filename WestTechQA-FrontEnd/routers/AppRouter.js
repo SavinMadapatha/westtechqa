@@ -1,11 +1,14 @@
 var AppRouter = Backbone.Router.extend({
     routes: {
-        "": "login",
+        "": "questionList",
+        "login": "loginView",
         "register": "registerView",
-        "questions": "questionList"
+        "questions": "questionList",
+        'questions/:id': 'questionDetail'
     },
 
-    login: function() {
+    loginView: function() {
+        console.log('Navigating to login page');
         // Only create a new login view if it does not exist
         if (!loginView) {
             loginView = new LoginView({ el: '#app' });
@@ -14,18 +17,19 @@ var AppRouter = Backbone.Router.extend({
     },
 
     registerView: function() {
+        console.log('Navigating to register page...');
         registerView = new RegisterView({ el: '#app' });
         registerView.render();
-    },
-
-    home: function(){
-        console.log('Navigating to home...');
-        $('#app').html('Home Page Content');
     },
 
     questionList: function(){
         console.log('Navigating to questions...');
         var questionListView = new QuestionListView({ el: '#app' });
         questionListView.render();
+    },
+
+    questionDetail: function(id) {
+        console.log('Navigating to question detail with ID:', id);
+        var questionDetailView = new QuestionDetailView({ el: '#app', questionId: id });
     }
 });

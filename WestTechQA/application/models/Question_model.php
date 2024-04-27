@@ -26,9 +26,37 @@ class Question_model extends CI_Model {
     }
 
     // Get a single question by ID
-    public function get_question($id) {
-        $query = $this->db->get_where('Question', array('question_id' => $id));
-        return $query->row_array();
+    // Retrieve a question with its answers, user info, and tags
+    public function get_question_with_details($id) {
+        // First, get the question details along with user info
+        $this->db->select('Question.*, User.username');
+        $this->db->from('Question');
+        $this->db->join('User', 'User.user_id = Question.user_id');
+        $this->db->where('question_id', $id);
+        $question = $this->db->get()->row_array();
+
+        // Check if the question exists
+        if (!$question) return null;
+
+        // Get the answers and user info for each answer
+        $this->db->select('Answer.*, User.username');
+        $this->db->from('Answer');
+        $this->db->join('User', 'User.user_id = Answer.user_id');
+        $this->db->where('question_id', $id);
+        $answers = $this->db->get()->result_array();
+
+        // Now get the tags for the question
+        $this->db->select('Tag.tag_name');
+        $this->db->from('QuestionTag');
+        $this->db->join('Tag', 'Tag.tag_id = QuestionTag.tag_id');
+        $this->db->where('question_id', $id);
+        $tags = $this->db->get()->result_array();
+
+        // Add the answers and tags to the question array
+        $question['answers'] = $answers;
+        $question['tags'] = array_column($tags, 'tag_name'); // Flatten the tags array
+
+        return $question;
     }
 
     // Add a new question

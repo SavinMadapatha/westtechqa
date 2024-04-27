@@ -1,15 +1,16 @@
-<script type="text/template" id="question-template">
-  <% _.each(questions, function(question) { %>
-      <div class="question-item">
-          <div class="question-content-footer-wrapper">
-              <h3 class="question-title"><%= question.title %></h3>
-              <p class="question-content"><%= question.content %></p>
-              <footer class="question-footer">
-                  <span class="question-tags"><%= question.tags.join(', ') %></span>
-                  <span class="question-user-date">by <strong><%= question.username %></strong> on <%= question.formattedDate %></span>
-              </footer>
-          </div>
-          <span class="question-answers-count"><%= question.answersCount %> Answers</span>
-      </div>
-  <% }); %>
-</script>
+<% _.each(questions, function(question) { %>
+    <div class="question-item">
+        <div class="question-content-footer-wrapper">
+            <h3 class="question-title">
+                <a href="#questions/<%= question.question_id %>" data-id="<%= question.question_id %>"><%= question.title %></a>
+            </h3>
+            <p class="question-content"><%= question.content %></p>
+            <footer class="question-footer">
+                <span class="question-tags"><%= question.tags.join(', ') %></span>
+                <span class="question-user-date">by <strong><%= question.username %></strong> on <%= question.formattedDate %></span>
+            </footer>
+        </div>
+        <span class="question-answers-count"><%= question.answersCount %> Answers</span>
+    </div>
+<% }); %>
+  

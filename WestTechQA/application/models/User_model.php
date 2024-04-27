@@ -6,6 +6,7 @@ class User_model extends CI_Model {
         $this->load->database();
     }
 
+    // inserts a newly registered user data to the 'User' table in DB
     public function insert_user($data) {
         return $this->db->insert('User', $data);
     }

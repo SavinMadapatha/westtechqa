@@ -1,22 +1,16 @@
-// NavBarView.js
 var NavBarView = Backbone.View.extend({
-    el: '.custom-navbar', // Targeting the navbar instead of the sidebar for these operations
+    el: '.custom-navbar',
 
     initialize: function(options) {
         this.router = options.router;
-        this.render(); // Ensure that the navbar is updated upon initialization
+        this.render();
     },
 
     events: {
-        'click .nav-home': 'navigateHome',
         'click .nav-questions': 'navigateQuestions',
         'click .btn-login': 'navigateLogin',
-        'click .btn-register': 'navigateRegister'
-    },
-
-    navigateHome: function(e) {
-        e.preventDefault();
-        this.router.navigate("home", {trigger: true});
+        'click .btn-register': 'navigateRegister',
+        'click .user-profile': 'navigateUserProfile'
     },
 
     navigateQuestions: function(e) {
@@ -26,7 +20,7 @@ var NavBarView = Backbone.View.extend({
 
     navigateLogin: function(e) {
         e.preventDefault();
-        this.router.navigate("#", {trigger: true});
+        this.router.navigate("login", {trigger: true});
     },
 
     navigateRegister: function(e) {
@@ -34,17 +28,21 @@ var NavBarView = Backbone.View.extend({
         this.router.navigate("register", {trigger: true});
     },
 
-    render: function() {
-        this.updateNavbar();
+    navigateUserProfile: function(e){
+        e.preventDefault();
+        this.router.navigate("profile", {trigger: true});
     },
 
-    updateNavbar: function() {
-        if (isLoggedIn()) {
-            this.$('.btn-login, .btn-register').hide(); // Hide login and register buttons if logged in
-            this.$('.btn-logout').show(); // Assuming there's a logout button to show
-        } else {
-            this.$('.btn-login, .btn-register').show(); // Show login and register buttons if not logged in
-            this.$('.btn-logout').hide();
-        }
+    render: function() {
+        var self = this;
+        checkLoginStatus(function(isLoggedIn) {
+            if (isLoggedIn) {
+                self.$('.btn-login, .btn-register').hide();
+                self.$('.user-profile').show(); 
+            } else {
+                self.$('.btn-login, .btn-register').show();
+                self.$('.user-profile').hide(); 
+            }
+        });
     }
 });
