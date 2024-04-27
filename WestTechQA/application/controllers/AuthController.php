@@ -1,42 +1,88 @@
 <?php
-defined('BASEPATH') OR exit('No direct script access allowed');
-
 class AuthController extends CI_Controller {
 
     public function __construct() {
         parent::__construct();
-        $this->load->model('UserModel');
-        $this->load->helper('url');
-        $this->load->library('session');
+        $this->load->model('User_model');
+        $this->load->library('form_validation');
+        
+        // Set the response content type to JSON
+        $this->output->set_content_type('application/json');
     }
 
-    // Shows the login page
-    public function index() {
-        $this->load->view('LoginView');
-    }
+    // this function validates the inputs given by the user and calls the insert_user() function in User_model to insert
+    // the new user details to 'User' table in the DB.
+    public function register() {
+        $json = file_get_contents('php://input');
+        $data = json_decode($json);
 
-    // Register a new user
-    public function register($email, $username, $password) {
-        $timestamp = date('Y-m-d H:i:s');
-        $this->UserModel->createUser($email, $username, $password, $timestamp);
-        // Redirect or load a view after registration
-    }
+        // Input validation
+        $this->form_validation->set_data((array)$data);
+        $this->form_validation->set_rules('username', 'Username', 'required|alpha_numeric|min_length[5]|is_unique[User.username]');
+        $this->form_validation->set_rules('email', 'Email', 'required|valid_email|is_unique[User.email]');
+        $this->form_validation->set_rules('password', 'Password', 'required|min_length[8]');
 
-    // Process login
-    public function login($username, $password) {
-        $userInfo = $this->UserModel->getUserInfo($username);
-        if ($userInfo && password_verify($password, $userInfo['password'])) {
-            // Set session data or token
-            $this->session->set_userdata('logged_in', true);
-            // Redirect to the authenticated area
+        if ($this->form_validation->run() === FALSE) {
+            $this->output->set_status_header(400);
+            echo json_encode(['status' => 'error', 'message' => validation_errors()]);
+            return;
+        }
+
+        // Hash password
+        $hashedPassword = password_hash($data->password, PASSWORD_DEFAULT);
+
+        // Prepare user data
+        $userData = [
+            'username' => $data->username,
+            'email' => $data->email,
+            'password' => $hashedPassword,
+            'registered_date' => date('Y-m-d H:i:s')  // Current date and time
+        ];
+
+        // Insert user into the database
+        if ($this->User_model->insert_user($userData)) {
+            echo json_encode(['status' => 'success', 'message' => 'Registration successful']);
         } else {
-            // Handle login failure
+            $this->output->set_status_header(500);
+            echo json_encode(['status' => 'error', 'message' => 'Failed to register user']);
         }
     }
 
-    // Process logout
-    public function logout() {
-        $this->session->unset_userdata('logged_in');
-        // Redirect to login page or home page
+    // this function verifies the login user credentials and returns the status of the login attempt.
+    public function login() {
+        // Get the JSON input and decode it
+        $json = file_get_contents('php://input');
+        $data = json_decode($json);
+
+        // Input validation
+        $this->form_validation->set_data((array)$data);
+        $this->form_validation->set_rules('email', 'Email', 'required|valid_email');
+        $this->form_validation->set_rules('password', 'Password', 'required');
+
+        if ($this->form_validation->run() == FALSE) {
+            // Send back the validation errors
+            $this->output->set_status_header(400); // HTTP status 400: Bad request
+            echo json_encode(['status' => 'error', 'message' => validation_errors()]);
+            return;
+        }
+
+        $email = $data->email;
+        $password = $data->password;
+
+        // Retrieve user from the database
+        $user = $this->User_model->get_user_by_email($email);
+
+        if ($user && password_verify($password, $user['password'])) {
+            // Set user session or generate a token
+            $this->session->set_userdata('logged_in', $user['user_id']);
+            
+            // Return success response
+            echo json_encode(['status' => 'success', 'message' => 'Login successful', 'user' => $user]);
+        } else {
+            // Return error response
+            $this->output->set_status_header(401); // HTTP status 401: Unauthorized
+            echo json_encode(['status' => 'error', 'message' => 'Login failed']);
+        }
     }
 }
+?>

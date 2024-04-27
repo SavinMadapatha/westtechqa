@@ -1,0 +1,17 @@
+RewriteEngine On
+RewriteBase /WestTechQA/  
+
+# Removes access to the system folder by users.
+RewriteCond %{REQUEST_URI} ^system.*
+RewriteRule ^(.*)$ /index.php?/$1 [L]
+
+# Prevents user access to the application folder
+RewriteCond %{REQUEST_URI} ^application.*
+RewriteRule ^(.*)$ /index.php?/$1 [L]
+
+# Checks for requested files, directories, and links
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+
+# Rewrites all URLs to the main index.php entry point
+RewriteRule ^(.*)$ index.php?/$1 [L]

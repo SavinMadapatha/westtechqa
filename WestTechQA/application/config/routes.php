@@ -53,6 +53,8 @@ $route['default_controller'] = 'authcontroller';
 $route['404_override'] = '';
 $route['translate_uri_dashes'] = FALSE;
 
+$route['api/auth/register'] = 'AuthController/register';
+$route['api/auth/login'] = 'AuthController/login';
 
 // General route for questions that handles both listing and creating depending on the HTTP method
 $route['api/questions'] = 'questions/index';

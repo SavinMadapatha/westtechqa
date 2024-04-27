@@ -14,7 +14,7 @@ var QuestionListView = Backbone.View.extend({
                 var templateHtml = $("<div>").html(data).find('#question-template').html();
                 if (templateHtml) {
                     self.template = _.template(templateHtml);
-                    self.listenTo(self.collection, 'sync', self.render);  // Listen for the sync event
+                    self.listenTo(self.collection, 'sync', self.render);  
                     self.collection.fetch({reset: true});  // Fetch the collection data
                 } else {
                     console.error('Template content not found.');
@@ -26,6 +26,7 @@ var QuestionListView = Backbone.View.extend({
     },
 
     render: function() {
+        $('.custom-navbar').removeClass('login-page'); // removes the login-page class to show the default navbar
         var self = this;
         this.$el.empty(); // Clears the existing list
 
@@ -50,11 +51,6 @@ var QuestionListView = Backbone.View.extend({
         this.$el.html(this.template({ questions: questionData }));
 
         return this;
-    },
-
-    // addQuestion: function(question) {
-    //     var view = new QuestionView({model: question});
-    //     this.$el.append(view.render().el);
-    // }
+    }
 });
 

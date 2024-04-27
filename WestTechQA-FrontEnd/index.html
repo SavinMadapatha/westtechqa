@@ -33,17 +33,14 @@
   <div class="sidebar sidebar-collapsed" id="sidebarMenu">
     <div class="sidebar-content">
       <ul class="sidebar-menu">
-        <li><a href="#" class="nav-home">Home</a></li>
+        <li><a href="#questions" class="nav-home">Questions</a></li>
         <li><a href="#" class="nav-about">About</a></li>
       </ul>
     </div>
   </div>
 
   <main id="app">
-    <section class="question-list">
       <!-- ... -->
-      <div id="questions-list"></div>
-    </section>
   </main>
 
   <!-- Dependencies -->
@@ -52,6 +49,8 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/backbone.js/1.4.0/backbone-min.js"></script>
 
   <!-- Models -->
+  <script src="models/LoginModel.js"></script>
+  <script src="models/RegisterModel.js"></script>
   <script src="models/UserModel.js"></script>
   <script src="models/QuestionModel.js"></script>
   <script src="models/AnswerModel.js"></script>
@@ -65,6 +64,8 @@
    <script src="routers/AppRouter.js"></script>
 
   <!-- Views -->
+  <script src="views/LoginView.js"></script>
+  <script src="views/RegisterView.js"></script>
   <script src="views/QuestionListView.js"></script>
   <script src="views/QuestionView.js"></script>
   <script src="views/NavBarView.js"></script>

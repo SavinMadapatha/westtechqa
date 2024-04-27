@@ -1,4 +1,27 @@
+html,
+body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+}
+
 /* Navbar Styles */
+/* Hide all navbar items except the logo on the login page */
+.custom-navbar.login-page .navbar,
+.custom-navbar.login-page .menu-toggle,
+.custom-navbar.login-page .search-bar,
+.custom-navbar.login-page .btn-login,
+.custom-navbar.login-page .btn-register {
+  display: none;
+}
+
+/* Show only the logo in the navbar on the login page */
+.custom-navbar.login-page .navbar-header {
+  justify-content: left;
+  flex-grow: 1;
+}
+
 .custom-navbar {
   display: flex;
   align-items: center;
@@ -110,6 +133,71 @@
   background-color: #28a745;
 }
 
+/* login page styles */
+.form-signin {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: #fff;
+  padding: 30px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  width: 340px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.form-signin label {
+  width: 100%;
+  font-size: 14px;
+}
+
+.form-signin input {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 20px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+/* Style for the login button */
+.form-signin button {
+  width: 100%;
+  padding: 10px;
+  border: none;
+  border-radius: 4px;
+  background-color: #007bff;
+  color: white;
+  margin-top: 10px;
+  cursor: pointer;
+}
+
+/* Adding hover effect to the button */
+.form-signin button:hover {
+  background-color: #0056b3;
+}
+
+/* Style for the additional links */
+.login-link {
+  margin-top: 20px;
+}
+
+.registration-link {
+  text-align: center;
+  margin-top: 25px;
+}
+
+.registration-link a {
+  color: #007bff;
+  text-decoration: none;
+}
+
+.registration-link a:hover {
+  text-decoration: underline;
+}
+
 /* questions list (home page) styles */
 * {
   margin: 0;
@@ -159,7 +247,7 @@ header h1 {
   margin-bottom: 20px;
   display: flex;
   justify-content: space-between;
-  align-items: flex-start; /* Aligns items to the top */
+  align-items: flex-start;
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
 }
 
@@ -175,7 +263,7 @@ header h1 {
 }
 
 .question-content-wrapper {
-  max-width: 80%; /* Ensure that content does not overlap the answer count */
+  max-width: 80%;
 }
 
 .question-content-footer-wrapper {
@@ -184,10 +272,10 @@ header h1 {
 
 .question-footer {
   display: flex;
-  justify-content: space-between; /* Space out tags and user/date */
-  align-items: center; /* Center align the items vertically */
-  flex-wrap: wrap; /* Allow items to wrap onto the next line */
-  margin-top: 10px; /* Spacing from content to footer */
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-top: 10px;
 }
 
 .question-tags {
