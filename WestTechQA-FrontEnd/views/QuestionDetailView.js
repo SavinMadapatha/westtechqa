@@ -15,11 +15,53 @@ var QuestionDetailView = Backbone.View.extend({
     },
 
     events: {
-        'click #ask-question-btn': 'askQuestion'
+        'click #ask-question-btn': 'askQuestion',
+        'click #go-to-login': 'redirectToLogin',
+        'click .close-modal-btn': 'closeLoginPrompt'
     },
 
-    askQuestion: function() {
-        Backbone.history.navigate('ask', { trigger: true });
+    askQuestion: function(event) {
+        event.preventDefault();
+        var self = this;
+        checkLoginStatus(function(isLoggedIn) {
+            if (isLoggedIn) {
+                Backbone.history.navigate('ask', { trigger: true });
+            } else {
+                self.showLoginPrompt();
+            }
+        });
+    },
+
+    showLoginPrompt: function() {
+        var self = this; // Ensure 'self' is available for the closure
+        var loginModalHTML = `
+            <div class="login-modal-overlay" id="login-modal-overlay">
+                <div class="login-modal">
+                    <span class="close-modal-btn">&#10005;</span> 
+                    <p class="alert-text">Only the users who are logged in can post questions!</p>
+                    <button id="go-to-login">Login</button>
+                </div>
+            </div>
+        `;
+        $('body').append(loginModalHTML);
+        $('#login-modal-overlay').show();
+    
+        // Bind events directly to elements within the modal
+        $('#go-to-login').on('click', function() {
+            self.redirectToLogin(); // Use 'self' to refer to the view instance
+        });
+        $('.close-modal-btn').on('click', function() {
+            self.closeLoginPrompt(); // Use 'self' to refer to the view instance
+        });
+    },
+
+    redirectToLogin: function() {
+        Backbone.history.navigate('login', {trigger: true});
+        this.closeLoginPrompt(); 
+    },
+    
+    closeLoginPrompt: function() {
+        $('#login-modal-overlay').remove(); 
     },
 
     render: function() {

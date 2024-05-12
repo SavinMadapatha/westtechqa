@@ -4,12 +4,12 @@ var AppRouter = Backbone.Router.extend({
         "login": "loginView",
         "register": "registerView",
         "questions": "questionList",
-        'questions/:id': 'questionDetail'
+        "questions/:id": "questionDetail",
+        "ask": "postQuestion" 
     },
 
     loginView: function() {
         console.log('Navigating to login page');
-
         if (!loginView) {
             loginView = new LoginView({ el: '#app' });
         }
@@ -31,5 +31,12 @@ var AppRouter = Backbone.Router.extend({
     questionDetail: function(id) {
         console.log('Navigating to question detail with ID:', id);
         var questionDetailView = new QuestionDetailView({ el: '#app', questionId: id });
+        questionDetailView.render();
+    },
+
+    postQuestion: function() {
+        console.log('Navigating to post a question...');
+        var postQuestionView = new PostQuestionView({ el: '#app' });
+        postQuestionView.render();
     }
 });

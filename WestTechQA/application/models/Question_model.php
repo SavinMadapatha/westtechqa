@@ -61,7 +61,8 @@ class Question_model extends CI_Model {
 
     // Add a new question
     public function set_question($data) {
-        return $this->db->insert('Question', $data);
+        $this->db->insert('Question', $data);
+        return $this->db->insert_id(); 
     }
 
     // Update an existing question

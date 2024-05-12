@@ -1,0 +1,45 @@
+<script type="text/template" id="post-question-template">
+    <div class="post-question-container">
+        <h1>Ask a Technical Question</h1>
+        <div class="instruction-box">
+            <p class="instructions-header">How to add a question:</p>
+            <ol class="instructions-content">
+                <li class="li">Summarize your issue in a brief title.</li>
+                <li class="li">Provide a detailed description, including any code snippets or error messages.</li>
+                <li class="li">Choose relevant tags to help categorize your question, such as Python, Java, or MachineLearning.</li>
+            </ol>
+        </div>
+        <form class="post-question-form">
+            <div class="input-box">
+                <label>Title</label>
+                <input type="text" name="title" placeholder="e.g., How to sort an array in Java?">
+            </div>
+            
+            <div class="input-box input-box-content">
+                <label>Explain your question in detail</label>
+                <textarea class="content-text-area" name="content" placeholder="Describe your question..."></textarea>
+            </div>
+            
+            <div class="input-box">
+                <label>Relevant tags</label>
+                <div class="tags-checkboxes">
+                    <label><input type="checkbox" name="tags[]" value="Java"> Java</label>
+                    <label><input type="checkbox" name="tags[]" value="Python"> Python</label>
+                    <label><input type="checkbox" name="tags[]" value="Python"> DSA</label>
+                    <label><input type="checkbox" name="tags[]" value="HTML"> HTML</label>
+                    <label><input type="checkbox" name="tags[]" value="CSS"> CSS</label>
+                    <label><input type="checkbox" name="tags[]" value="JS"> JS</label>
+                    <label><input type="checkbox" name="tags[]" value="React"> React</label>
+                    <label><input type="checkbox" name="tags[]" value="React"> Angular</label>
+                    <label><input type="checkbox" name="tags[]" value="ML"> ML</label>
+                    <label><input type="checkbox" name="tags[]" value="AI"> AI</label>
+                    <label><input type="checkbox" name="tags[]" value="PHP"> PHP</label>
+                    <label><input type="checkbox" name="tags[]" value="CodeIgnitor"> CodeIgnitor</label>
+                    <label><input type="checkbox" name="tags[]" value="Backbone"> Backbone</label>
+                </div>
+            </div>
+            
+            <button type="submit" id="post-question-btn">Post Question</button>
+        </form>
+    </div>
+</script>
