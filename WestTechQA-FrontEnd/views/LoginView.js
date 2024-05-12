@@ -33,30 +33,24 @@ var LoginView = Backbone.View.extend({
         var password = this.$('#inputPassword').val();
         this.model.set({email: email, password: password});
 
-        // Save the model to the server
         this.model.save({}, {
             success: function(model, response) {
                 if(response.status === 'success') {
-                    // Navigate to the home page or dashboard
                     appRouter.navigate('questions', {trigger: true});
                 } else {
-                    // Handle login failure
-                    alert(response.message); // Placeholder for actual error handling
+                    alert(response.message); 
                 }
             },
             error: function(model, response) {
-                // Handle the error case
                 console.log('Login failed with response:', response.responseText);
-                alert('Login failed.'); // Placeholder for actual error handling
+                alert('Login failed.'); 
             }
         });
     },
 
     render: function() {
-        // Add 'login-page' class to the navbar
         $('.custom-navbar').addClass('login-page');
         
-        // Check if the template is loaded before rendering
         if (this.template) {
             this.$el.html(this.template());
         }
@@ -64,9 +58,7 @@ var LoginView = Backbone.View.extend({
     },
 
     remove: function() {
-        // Remove 'login-page' class from the navbar when the view is removed
         $('.custom-navbar').removeClass('login-page');
-        // Call the base remove function
         Backbone.View.prototype.remove.apply(this, arguments);
     }
 });

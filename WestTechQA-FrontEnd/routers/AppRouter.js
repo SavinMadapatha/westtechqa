@@ -9,7 +9,7 @@ var AppRouter = Backbone.Router.extend({
 
     loginView: function() {
         console.log('Navigating to login page');
-        // Only create a new login view if it does not exist
+
         if (!loginView) {
             loginView = new LoginView({ el: '#app' });
         }

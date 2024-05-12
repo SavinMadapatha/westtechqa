@@ -18,27 +18,25 @@ var navbar;
 var loginView;
 
 $(document).ready(function() {
-    // First, ensure all templates are loaded
     preloadTemplates().then(function() {
-        // Templates are loaded, initialize the router and other components
         appRouter = new AppRouter();
 
-        // Start Backbone history
         Backbone.history.start();
 
-        // Initialize the navbar
-        navbar = new NavBarView({ router: appRouter });
-
-        // Check if the user is logged in
         checkLoginStatus(function(isLoggedIn) {
             if (isLoggedIn) {
-                appRouter.navigate('questions', {trigger: true});
+                if (Backbone.history.getFragment() === "") {
+                    appRouter.navigate('questions', {trigger: true});
+                }
             } else {
-                appRouter.navigate('', {trigger: true});
+                if (Backbone.history.getFragment() === "") {
+                    appRouter.navigate('', {trigger: true});
+                }
             }
         });
 
-        // Toggle sidebar event
+        navbar = new NavBarView({ router: appRouter });
+
         $('#toggle-sidebar').click(function() {
             var sidebarWidth = $('#sidebar').width() > 0 ? '0px' : '250px';
             $('#sidebar').css('width', sidebarWidth);

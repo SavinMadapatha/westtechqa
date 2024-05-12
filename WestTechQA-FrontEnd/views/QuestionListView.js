@@ -16,7 +16,7 @@ var QuestionListView = Backbone.View.extend({
     },
 
     render: function() {
-        this.template = window.templates.questionTemplate; // Assign template during render
+        this.template = window.templates.questionTemplate; 
         if (!this.template) {
             console.error('Template not loaded.');
             return this;

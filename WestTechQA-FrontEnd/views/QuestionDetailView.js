@@ -25,26 +25,24 @@ var QuestionDetailView = Backbone.View.extend({
     render: function() {
         if (!this.template) {
             console.log('Template not yet loaded.');
-            return this; 
+            return this;
         }
-
+    
         var data = this.model.toJSON();
-
-        if (data.posted_date) {
-            data.formattedDate = new Date(data.posted_date.replace(' ', 'T') + 'Z').toLocaleDateString();
-        }
-
+    
+        data.formattedDate = new Date(data.posted_date.replace(' ', 'T') + 'Z').toLocaleDateString();
+    
         if (data.answers && Array.isArray(data.answers)) {
-            data.answers = data.answers.map(function(answer) {
-                if (answer.posted_date) {
-                    answer.formattedDate = new Date(answer.posted_date.replace(' ', 'T') + 'Z').toLocaleDateString();
-                }
-                return answer;
-            });
+            data.answersCount = data.answers.length;
+            data.answers = data.answers.map((answer) => ({
+                ...answer,
+                formattedDate: new Date(answer.posted_date.replace(' ', 'T') + 'Z').toLocaleDateString()
+            }));
         }
-
+    
         this.$el.html(this.template(data));
         console.log('Rendered Question Detail View');
         return this;
     }
+    
 });
