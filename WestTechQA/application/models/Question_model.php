@@ -13,11 +13,10 @@ class Question_model extends CI_Model {
         $this->db->join('Answer', 'Answer.question_id = Question.question_id', 'left');
         $this->db->join('QuestionTag', 'QuestionTag.question_id = Question.question_id', 'left');
         $this->db->join('Tag', 'Tag.tag_id = QuestionTag.tag_id', 'left');
-        $this->db->group_by('Question.question_id'); // Group by question to count answers and concatenate tags correctly
+        $this->db->group_by('Question.question_id'); 
         $this->db->order_by('Question.posted_date', 'DESC');
     
         $query = $this->db->get();
-        // Process each row to add tags as an array
         $results = $query->result_array();
         foreach ($results as $key => $row) {
             $results[$key]['tags'] = explode(',', $row['tags']);
@@ -26,16 +25,13 @@ class Question_model extends CI_Model {
     }
 
     // Get a single question by ID
-    // Retrieve a question with its answers, user info, and tags
     public function get_question_with_details($id) {
-        // First, get the question details along with user info
         $this->db->select('Question.*, User.username');
         $this->db->from('Question');
         $this->db->join('User', 'User.user_id = Question.user_id');
         $this->db->where('question_id', $id);
         $question = $this->db->get()->row_array();
 
-        // Check if the question exists
         if (!$question) return null;
 
         // Get the answers and user info for each answer
@@ -45,7 +41,7 @@ class Question_model extends CI_Model {
         $this->db->where('question_id', $id);
         $answers = $this->db->get()->result_array();
 
-        // Now get the tags for the question
+        // Get the tags for the question
         $this->db->select('Tag.tag_name');
         $this->db->from('QuestionTag');
         $this->db->join('Tag', 'Tag.tag_id = QuestionTag.tag_id');

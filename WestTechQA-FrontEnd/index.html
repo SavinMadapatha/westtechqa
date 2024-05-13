@@ -24,8 +24,8 @@
             <button type="submit">Search</button>
         </div>
         <img src="user_icon.png" alt="User Profile" class="user-profile" style="display: none;">
-        <button class="btn-login">Login</button>
-        <button class="btn-register">Register</button>
+        <a href="#login" class="btn-login">Login</a>
+        <a href="#register" class="btn-register">Register</a>
     </nav>
   </header>
 
@@ -47,9 +47,6 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.13.1/underscore-min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/backbone.js/1.4.0/backbone-min.js"></script>
 
-  <!-- Template Caching -->
-  <script src="js/GlobalTemplateCache.js"></script>
-
   <!-- Models -->
   <script src="models/LoginModel.js"></script>
   <script src="models/RegisterModel.js"></script>
@@ -68,7 +65,6 @@
   <script src="routers/AppRouter.js"></script>
 
   <!-- Views -->
-  <script src="views/NavBarView.js"></script>
   <script src="views/LoginView.js"></script>
   <script src="views/RegisterView.js"></script>
   <script src="views/QuestionListView.js"></script>

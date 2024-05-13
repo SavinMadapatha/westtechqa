@@ -4,7 +4,11 @@ function checkLoginStatus(callback) {
         type: 'GET',
         dataType: 'json',
         success: function(response) {
-            callback(response.logged_in);
+            if (response.logged_in) {
+                callback(true, response.user_id); 
+            } else {
+                callback(false);
+            }
         },
         error: function(error) {
             console.log('Error checking session:', error);
@@ -14,35 +18,27 @@ function checkLoginStatus(callback) {
 }
 
 var appRouter;
-var navbar;
 var loginView;
 
 $(document).ready(function() {
-    preloadTemplates().then(function() {
-        appRouter = new AppRouter();
+    appRouter = new AppRouter();
 
-        Backbone.history.start();
+    Backbone.history.start();
 
-        checkLoginStatus(function(isLoggedIn) {
-            if (isLoggedIn) {
-                if (Backbone.history.getFragment() === "") {
-                    appRouter.navigate('questions', {trigger: true});
-                }
-            } else {
-                if (Backbone.history.getFragment() === "") {
-                    appRouter.navigate('', {trigger: true});
-                }
+    checkLoginStatus(function(isLoggedIn) {
+        if (isLoggedIn) {
+            if (Backbone.history.getFragment() === "") {
+                appRouter.navigate('questions', {trigger: true});
             }
-        });
+        } else {
+            if (Backbone.history.getFragment() === "") {
+                appRouter.navigate('', {trigger: true});
+            }
+        }
+    });
 
-        navbar = new NavBarView({ router: appRouter });
-
-        $('#toggle-sidebar').click(function() {
-            var sidebarWidth = $('#sidebar').width() > 0 ? '0px' : '250px';
-            $('#sidebar').css('width', sidebarWidth);
-        });
-
-    }).catch(function(error) {
-        console.error("Error loading templates:", error);
+    $('#toggle-sidebar').click(function() {
+        var sidebarWidth = $('#sidebar').width() > 0 ? '0px' : '250px';
+        $('#sidebar').css('width', sidebarWidth);
     });
 });

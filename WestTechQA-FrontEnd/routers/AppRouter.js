@@ -8,6 +8,28 @@ var AppRouter = Backbone.Router.extend({
         "ask": "postQuestion" 
     },
 
+    initialize: function() {
+        this.on('route', this.updateNavbar);
+    },
+
+    updateNavbar: function(routeName) {
+        checkLoginStatus(function(isLoggedIn) {
+            if (isLoggedIn) {
+                $('.btn-login, .btn-register').hide();
+                $('.user-profile').show();
+            } else {
+                $('.btn-login, .btn-register').show();
+                $('.user-profile').hide();
+            }
+        });
+
+        if (routeName === 'loginView' || routeName === 'registerView') {
+            $('.custom-navbar').addClass('login-page');
+        } else {
+            $('.custom-navbar').removeClass('login-page');
+        }
+    },
+
     loginView: function() {
         console.log('Navigating to login page');
         if (!loginView) {
@@ -22,7 +44,7 @@ var AppRouter = Backbone.Router.extend({
         registerView.render();
     },
 
-    questionList: function(){
+    questionList: function() {
         console.log('Navigating to questions...');
         var questionListView = new QuestionListView({ el: '#app' });
         questionListView.render();
@@ -39,4 +61,20 @@ var AppRouter = Backbone.Router.extend({
         var postQuestionView = new PostQuestionView({ el: '#app' });
         postQuestionView.render();
     }
+});
+
+// global navigation events
+$(document).on('click', 'a.btn-login', function(e) {
+    e.preventDefault();
+    Backbone.history.navigate('login', { trigger: true });
+});
+
+$(document).on('click', 'a.btn-register', function(e) {
+    e.preventDefault();
+    Backbone.history.navigate('register', { trigger: true });
+});
+
+$(document).on('click', '.user-profile', function(e) {
+    e.preventDefault();
+    Backbone.history.navigate('profile', { trigger: true });
 });

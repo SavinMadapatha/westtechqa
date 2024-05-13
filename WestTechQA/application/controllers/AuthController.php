@@ -1,18 +1,22 @@
 <?php
-class AuthController extends CI_Controller {
+defined('BASEPATH') OR exit('No direct script access allowed'); 
+
+require APPPATH .'/libraries/REST_Controller.php'; 
+require APPPATH .'/libraries/Format.php'; 
+
+class AuthController extends REST_Controller {
 
     public function __construct() {
         parent::__construct();
         $this->load->model('User_model');
         $this->load->library('form_validation');
-        
-        // Set the response content type to JSON
+
         $this->output->set_content_type('application/json');
     }
 
     // this function validates the inputs given by the user and calls the insert_user() function in User_model to insert
     // the new user details to 'User' table in the DB.
-    public function register() {
+    public function register_post() {
         $json = file_get_contents('php://input');
         $data = json_decode($json);
 
@@ -24,33 +28,31 @@ class AuthController extends CI_Controller {
 
         if ($this->form_validation->run() === FALSE) {
             $this->output->set_status_header(400);
-            echo json_encode(['status' => 'error', 'message' => validation_errors()]);
+            $this->response(['status' => 'error', 'message' => validation_errors()], REST_Controller::HTTP_BAD_REQUEST);
             return;
         }
 
         // Hash password
         $hashedPassword = password_hash($data->password, PASSWORD_DEFAULT);
 
-        // Prepare user data
         $userData = [
             'username' => $data->username,
             'email' => $data->email,
             'password' => $hashedPassword,
-            'registered_date' => date('Y-m-d H:i:s')  // Current date and time
+            'registered_date' => date('Y-m-d H:i:s')  
         ];
 
         // Insert user into the database
         if ($this->User_model->insert_user($userData)) {
-            echo json_encode(['status' => 'success', 'message' => 'Registration successful']);
+            $this->response(['status' => 'success', 'message' => 'Registration successful'], REST_Controller::HTTP_OK);
         } else {
             $this->output->set_status_header(500);
-            echo json_encode(['status' => 'error', 'message' => 'Failed to register user']);
+            $this->response(['status' => 'error', 'message' => 'Failed to register user'], REST_Controller::HTTP_BAD_REQUEST);
         }
     }
 
     // this function verifies the login user credentials and returns the status of the login attempt.
-    public function login() {
-        // Get the JSON input and decode it
+    public function login_post() {
         $json = file_get_contents('php://input');
         $data = json_decode($json);
 
@@ -60,37 +62,34 @@ class AuthController extends CI_Controller {
         $this->form_validation->set_rules('password', 'Password', 'required');
 
         if ($this->form_validation->run() == FALSE) {
-            // Send back the validation errors
-            $this->output->set_status_header(400); // HTTP status 400: Bad request
-            echo json_encode(['status' => 'error', 'message' => validation_errors()]);
+            $this->output->set_status_header(400); 
+            $this->response(['status' => 'error', 'message' => validation_errors()], REST_Controller::HTTP_BAD_REQUEST);
             return;
         }
 
         $email = $data->email;
         $password = $data->password;
 
-        // Retrieve user from the database
         $user = $this->User_model->get_user_by_email($email);
 
         if ($user && password_verify($password, $user['password'])) {
-            // Set user session or generate a token
+            // Set user session
             $this->session->set_userdata('logged_in', $user['user_id']);
             
-            // Return success response
-            echo json_encode(['status' => 'success', 'message' => 'Login successful', 'user' => $user]);
+            $this->response(['status' => 'success', 'message' => 'Login successful', 'user' => $user], REST_Controller::HTTP_OK);
         } else {
-            // Return error response
             $this->output->set_status_header(401); 
-            echo json_encode(['status' => 'error', 'message' => 'Login failed']);
+            $this->response(['status' => 'error', 'message' => 'Login failed'], REST_Controller::HTTP_UNAUTHORIZED);
         }
     }
 
-    public function check_session() {
+    public function checkSession_get() {
         log_message('debug', 'Session Data: ' . print_r($this->session->userdata(), true));
         if ($this->session->userdata('logged_in')) {
-            echo json_encode(['status' => 'success', 'logged_in' => true]);
+            $user_id = $this->session->userdata('logged_in');
+            $this->response(['status' => 'success', 'logged_in' => true, 'user_id' => $user_id], REST_Controller::HTTP_OK);
         } else {
-            echo json_encode(['status' => 'error', 'logged_in' => false]);
+            $this->response(['status' => 'error', 'logged_in' => false], REST_Controller::HTTP_UNAUTHORIZED);
         }
     }
 }

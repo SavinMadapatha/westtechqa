@@ -6,14 +6,12 @@ var LoginView = Backbone.View.extend({
 
     loadTemplate: function() {
         var self = this;
-        // Fetch the login template HTML from an external file
         $.get('templates/loginTemplate.html')
             .done(function(data) {
-                // Extract the template string from the fetched data
                 var templateHtml = $(data).filter('#login-template').html();
                 if (templateHtml) {
                     self.template = _.template(templateHtml);
-                    self.render(); // Render after the template is loaded
+                    self.render(); 
                 } else {
                     console.error('Login template content not found.');
                 }
@@ -36,6 +34,7 @@ var LoginView = Backbone.View.extend({
         this.model.save({}, {
             success: function(model, response) {
                 if(response.status === 'success') {
+                    Backbone.trigger('loginSuccess'); 
                     appRouter.navigate('questions', {trigger: true});
                 } else {
                     alert(response.message); 
@@ -49,16 +48,10 @@ var LoginView = Backbone.View.extend({
     },
 
     render: function() {
-        $('.custom-navbar').addClass('login-page');
-        
         if (this.template) {
             this.$el.html(this.template());
         }
         return this;
-    },
-
-    remove: function() {
-        $('.custom-navbar').removeClass('login-page');
-        Backbone.View.prototype.remove.apply(this, arguments);
     }
+
 });

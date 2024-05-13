@@ -51,16 +51,9 @@ var RegisterView = Backbone.View.extend({
     },
 
     render: function() {
-        $('.custom-navbar').addClass('login-page');
-        
         if (this.template) {
             this.$el.html(this.template());
         }
         return this;
-    },
-
-    remove: function() {
-        $('.custom-navbar').removeClass('login-page');
-        Backbone.View.prototype.remove.apply(this, arguments);
     }
 });

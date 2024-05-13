@@ -15,3 +15,7 @@ RewriteCond %{REQUEST_FILENAME} !-d
 
 # Rewrites all URLs to the main index.php entry point
 RewriteRule ^(.*)$ index.php?/$1 [L]
+
+Header set Access-Control-Allow-Origin "*"
+Header set Access-Control-Allow-Methods "GET, POST, OPTIONS, PUT, DELETE"
+Header set Access-Control-Allow-Headers "Content-Type, Authorization"

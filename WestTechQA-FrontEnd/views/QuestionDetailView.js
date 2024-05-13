@@ -33,7 +33,7 @@ var QuestionDetailView = Backbone.View.extend({
     },
 
     showLoginPrompt: function() {
-        var self = this; // Ensure 'self' is available for the closure
+        var self = this; 
         var loginModalHTML = `
             <div class="login-modal-overlay" id="login-modal-overlay">
                 <div class="login-modal">
@@ -46,12 +46,11 @@ var QuestionDetailView = Backbone.View.extend({
         $('body').append(loginModalHTML);
         $('#login-modal-overlay').show();
     
-        // Bind events directly to elements within the modal
         $('#go-to-login').on('click', function() {
-            self.redirectToLogin(); // Use 'self' to refer to the view instance
+            self.redirectToLogin(); 
         });
         $('.close-modal-btn').on('click', function() {
-            self.closeLoginPrompt(); // Use 'self' to refer to the view instance
+            self.closeLoginPrompt(); 
         });
     },
 
