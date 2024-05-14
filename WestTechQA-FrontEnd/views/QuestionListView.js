@@ -1,8 +1,12 @@
 var QuestionListView = Backbone.View.extend({
-    initialize: function() {
+    initialize: function(options) {
         this.collection = new QuestionsCollection();
         this.listenTo(this.collection, 'sync', this.render);
-        this.collection.fetch({reset: true});
+        var fetchOptions = { reset: true };
+        if (options && options.search) {
+            fetchOptions.data = { search: options.search };
+        }
+        this.collection.fetch(fetchOptions);
         this.loadTemplate();
     },
 
@@ -10,7 +14,7 @@ var QuestionListView = Backbone.View.extend({
         var self = this;
         $.get('templates/questionTemplate.html', function(data) {
             self.template = _.template($('<div>').html(data).find('#question-template').html());
-            self.render(); 
+            if (self.collection.length) self.render();
         }).fail(function() {
             console.error('Failed to load question list template.');
         });
@@ -38,7 +42,12 @@ var QuestionListView = Backbone.View.extend({
             return data;
         });
 
-        this.$el.html(this.template({ questions: questionData }));
+        if (questionData.length === 0) {
+            this.$el.html('<div class="no-results">No questions found matching your search query!<br><a href="#questions" class="go-back">Go back</a></div>');
+        } else {
+            this.$el.html(this.template({ questions: questionData }));
+        }
+
         console.log('Rendered Question List View');
         return this;
     }

@@ -4,6 +4,7 @@ var AppRouter = Backbone.Router.extend({
         "login": "loginView",
         "register": "registerView",
         "questions": "questionList",
+        "questions/search/:query": "searchQuestions", 
         "questions/:id": "questionDetail",
         "ask": "postQuestion",
         "questions/:id/answer": "postAnswer"  
@@ -51,8 +52,15 @@ var AppRouter = Backbone.Router.extend({
     },
 
     questionList: function() {
+        this.clearBindedEvents();
         console.log('Navigating to questions...');
         var questionListView = new QuestionListView({ el: '#app' });
+        questionListView.render();
+    },
+
+    searchQuestions: function(query) {
+        console.log('Navigating to search results for:', query);
+        var questionListView = new QuestionListView({ el: '#app', search: query });
         questionListView.render();
     },
 

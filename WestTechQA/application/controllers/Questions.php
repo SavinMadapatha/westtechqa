@@ -13,7 +13,8 @@ class Questions extends REST_Controller {
     }
 
     public function allQuestions_get() {
-        $questions = $this->question_model->get_questions();
+        $search = $this->get('search');
+        $questions = $this->question_model->get_questions($search);
         $this->response($questions, REST_Controller::HTTP_OK);
     }
 
