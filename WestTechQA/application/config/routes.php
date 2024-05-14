@@ -56,6 +56,7 @@ $route['translate_uri_dashes'] = FALSE;
 $route['api/auth/register'] = 'AuthController/register';
 $route['api/auth/login'] = 'AuthController/login';
 $route['api/auth/session'] = 'AuthController/checkSession';
+$route['api/auth/logout'] = 'AuthController/logout';
 
 $route['api/questions'] = 'questions/allQuestions';
 $route['api/questions/(:num)'] = 'questions/getQuestion/$1';

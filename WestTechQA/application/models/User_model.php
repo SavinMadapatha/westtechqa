@@ -14,7 +14,13 @@ class User_model extends CI_Model {
     public function get_user_by_email($email) {
         $this->db->where('email', $email);
         $query = $this->db->get('user');
-        return $query->row_array(); // Return a single row result
+        return $query->row_array(); 
+    }
+
+    public function get_user_by_id($user_id) {
+        $this->db->where('user_id', $user_id);
+        $query = $this->db->get('User');
+        return $query->row_array(); 
     }
 
     public function verify_password($input_password, $stored_hash) {

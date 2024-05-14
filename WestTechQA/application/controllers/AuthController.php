@@ -20,7 +20,7 @@ class AuthController extends REST_Controller {
         $json = file_get_contents('php://input');
         $data = json_decode($json);
 
-        // Input validation
+        // Validate the input data
         $this->form_validation->set_data((array)$data);
         $this->form_validation->set_rules('username', 'Username', 'required|alpha_numeric|min_length[5]|is_unique[User.username]');
         $this->form_validation->set_rules('email', 'Email', 'required|valid_email|is_unique[User.email]');
@@ -32,7 +32,7 @@ class AuthController extends REST_Controller {
             return;
         }
 
-        // Hash password
+        // Hash password for better security
         $hashedPassword = password_hash($data->password, PASSWORD_DEFAULT);
 
         $userData = [
@@ -56,7 +56,7 @@ class AuthController extends REST_Controller {
         $json = file_get_contents('php://input');
         $data = json_decode($json);
 
-        // Input validation
+        // Validate the input data
         $this->form_validation->set_data((array)$data);
         $this->form_validation->set_rules('email', 'Email', 'required|valid_email');
         $this->form_validation->set_rules('password', 'Password', 'required');
@@ -73,7 +73,7 @@ class AuthController extends REST_Controller {
         $user = $this->User_model->get_user_by_email($email);
 
         if ($user && password_verify($password, $user['password'])) {
-            // Set user session
+            // Set user session 
             $this->session->set_userdata('logged_in', $user['user_id']);
             
             $this->response(['status' => 'success', 'message' => 'Login successful', 'user' => $user], REST_Controller::HTTP_OK);
@@ -87,10 +87,21 @@ class AuthController extends REST_Controller {
         log_message('debug', 'Session Data: ' . print_r($this->session->userdata(), true));
         if ($this->session->userdata('logged_in')) {
             $user_id = $this->session->userdata('logged_in');
-            $this->response(['status' => 'success', 'logged_in' => true, 'user_id' => $user_id], REST_Controller::HTTP_OK);
+            $user = $this->User_model->get_user_by_id($user_id); 
+            $this->response([
+                'status' => 'success', 
+                'logged_in' => true, 
+                'user_id' => $user_id,
+                'username' => $user['username'] 
+            ], REST_Controller::HTTP_OK);
         } else {
             $this->response(['status' => 'error', 'logged_in' => false], REST_Controller::HTTP_UNAUTHORIZED);
         }
+    }
+
+    public function logout_post() {
+        $this->session->sess_destroy();
+        $this->response(['status' => 'success', 'message' => 'Logged out successfully'], REST_Controller::HTTP_OK);
     }
 }
 ?>

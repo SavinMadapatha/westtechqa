@@ -5,7 +5,7 @@ function checkLoginStatus(callback) {
         dataType: 'json',
         success: function(response) {
             if (response.logged_in) {
-                callback(true, response.user_id); 
+                callback(true, response.user_id, response.username);
             } else {
                 callback(false);
             }
@@ -18,7 +18,6 @@ function checkLoginStatus(callback) {
 }
 
 var appRouter;
-var loginView;
 
 $(document).ready(function() {
     appRouter = new AppRouter();

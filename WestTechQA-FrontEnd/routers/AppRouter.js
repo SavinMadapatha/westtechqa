@@ -37,14 +37,14 @@ var AppRouter = Backbone.Router.extend({
     },
 
     loginView: function() {
+        this.clearBindedEvents();
         console.log('Navigating to login page');
-        if (!loginView) {
-            loginView = new LoginView({ el: '#app' });
-        }
+        loginView = new LoginView({ el: '#app' });
         loginView.render();
     },
 
     registerView: function() {
+        this.clearBindedEvents();
         console.log('Navigating to register page...');
         registerView = new RegisterView({ el: '#app' });
         registerView.render();
@@ -76,10 +76,4 @@ var AppRouter = Backbone.Router.extend({
         var postAnswerView = new PostAnswerView({ el: '#app', questionId: id });
         postAnswerView.render();
     }
-});
-
-
-$(document).on('click', '.user-profile', function(e) {
-    e.preventDefault();
-    Backbone.history.navigate('profile', { trigger: true });
 });
