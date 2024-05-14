@@ -5,6 +5,7 @@ var AppRouter = Backbone.Router.extend({
         "register": "registerView",
         "questions": "questionList",
         "questions/search/:query": "searchQuestions", 
+        "questions/tag/:tag": "tagFilteredQuestions",
         "questions/:id": "questionDetail",
         "ask": "postQuestion",
         "questions/:id/answer": "postAnswer"  
@@ -61,6 +62,12 @@ var AppRouter = Backbone.Router.extend({
     searchQuestions: function(query) {
         console.log('Navigating to search results for:', query);
         var questionListView = new QuestionListView({ el: '#app', search: query });
+        questionListView.render();
+    },
+
+    tagFilteredQuestions: function(tag) {
+        console.log('Filtering questions by tag:', tag);
+        var questionListView = new QuestionListView({ el: '#app', tag: tag });
         questionListView.render();
     },
 

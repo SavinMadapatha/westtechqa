@@ -6,29 +6,40 @@ class Question_model extends CI_Model {
     }
 
     // Get all questions: If a search query is passed groups and returns the questions that has either title or content alike the query
-    public function get_questions($search = null) {
+    public function get_questions($search = null, $tag = null) {
         $this->db->select('Question.*, User.username, COUNT(DISTINCT Answer.answer_id) as answersCount, GROUP_CONCAT(DISTINCT Tag.tag_name ORDER BY Tag.tag_name) as tags');
         $this->db->from('Question');
         $this->db->join('User', 'User.user_id = Question.user_id');
         $this->db->join('Answer', 'Answer.question_id = Question.question_id', 'left');
         $this->db->join('QuestionTag', 'QuestionTag.question_id = Question.question_id', 'left');
         $this->db->join('Tag', 'Tag.tag_id = QuestionTag.tag_id', 'left');
+        
+        // Search by query
         if ($search) {
             $this->db->group_start();
             $this->db->like('Question.title', $search);
             $this->db->or_like('Question.content', $search);
             $this->db->group_end();
         }
-        $this->db->group_by('Question.question_id'); 
+    
+        // Filter by tag
+        if ($tag) {
+            $this->db->where('Tag.tag_name', $tag);
+        }
+    
+        $this->db->group_by('Question.question_id');
         $this->db->order_by('Question.posted_date', 'DESC');
         
         $query = $this->db->get();
         $results = $query->result_array();
+    
+        // Process tags for each question
         foreach ($results as $key => $row) {
             $results[$key]['tags'] = explode(',', $row['tags']);
         }
         return $results;
-    } 
+    }
+    
 
     // Get a single question by ID
     public function get_question_with_details($id) {

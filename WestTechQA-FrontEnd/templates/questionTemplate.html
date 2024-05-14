@@ -7,7 +7,11 @@
                 </h3>
                 <p class="question-content"><%= question.content %></p>
                 <footer class="question-footer">
-                    <span class="question-tags"><%= question.tags.join(', ') %></span>
+                    <div class="question-tags">
+                        <% _.each(question.tags, function(tag) { %>
+                            <a href="#questions/tag/<%= tag %>" class="question-tag" data-tag="<%= tag %>"><%= tag %></a>
+                        <% }); %>
+                    </div>
                     <span class="question-user-date">by <strong><%= question.username %></strong> on <%= question.formattedDate %></span>
                 </footer>
             </div>

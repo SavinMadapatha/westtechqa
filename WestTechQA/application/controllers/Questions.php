@@ -14,7 +14,8 @@ class Questions extends REST_Controller {
 
     public function allQuestions_get() {
         $search = $this->get('search');
-        $questions = $this->question_model->get_questions($search);
+        $tag = $this->get('tag');  
+    $questions = $this->question_model->get_questions($search, $tag);
         $this->response($questions, REST_Controller::HTTP_OK);
     }
 

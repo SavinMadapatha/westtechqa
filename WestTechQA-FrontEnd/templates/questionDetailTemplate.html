@@ -6,7 +6,11 @@
     <span class="question-posted-date">posted on <%= formattedDate %></span>
     <p class="question-detail-content"><%= content %></p>
     <div class="question-detail-footer">
-        <span class="question-tags"><%= tags.join(', ') %></span>
+        <div class="question-tags">
+            <% _.each(tags, function(tag) { %>
+                <span class="question-tag"><%= tag %></span>
+            <% }); %>
+        </div>
         <div class="user-details">
             <img src="user.png" alt="Posted by" class="user">
             <span class="question-user"><strong><%= username %></strong></span>
