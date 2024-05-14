@@ -52,5 +52,33 @@ class Answers extends REST_Controller {
             $this->response(['error' => 'Failed to create answer'], REST_Controller::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
+
+    public function incrementVote_post($answer_id) {
+        $user_id = $this->session->userdata('logged_in');
+        if (!$user_id) {
+            $this->response(['error' => 'Unauthorized'], REST_Controller::HTTP_OK);
+            return;
+        }
+    
+        if ($this->answer_model->increment_vote($answer_id, $user_id)) {
+            $this->response(['message' => 'Vote incremented'], REST_Controller::HTTP_OK);
+        } else {
+            $this->response(['error' => 'Cannot vote more than once!'], REST_Controller::HTTP_OK);
+        }
+    }
+    
+    public function decrementVote_post($answer_id) {
+        $user_id = $this->session->userdata('logged_in');
+        if (!$user_id) {
+            $this->response(['error' => 'Unauthorized'], REST_Controller::HTTP_OK);
+            return;
+        }
+    
+        if ($this->answer_model->decrement_vote($answer_id, $user_id)) {
+            $this->response(['message' => 'Vote decremented'], REST_Controller::HTTP_OK);
+        } else {
+            $this->response(['error' => 'Cannot vote more than once or vote below zero!'], REST_Controller::HTTP_OK);
+        }
+    }    
 }
 ?>

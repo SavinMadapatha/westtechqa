@@ -18,7 +18,9 @@ var QuestionDetailView = Backbone.View.extend({
         'click #ask-question-btn': 'askQuestion',
         'click #add-answer-btn': 'addAnswer', 
         'click #go-to-login': 'redirectToLogin',
-        'click .close-modal-btn': 'closeLoginPrompt'
+        'click .close-modal-btn': 'closeLoginPrompt',
+        'click .vote-up': 'incrementVote',
+        'click .vote-down': 'decrementVote'
     },
 
     askQuestion: function(event) {
@@ -49,7 +51,7 @@ var QuestionDetailView = Backbone.View.extend({
             <div class="login-modal-overlay" id="login-modal-overlay">
                 <div class="login-modal">
                     <span class="close-modal-btn">&#10005;</span> 
-                    <p class="alert-text">Only the users who are logged in can post questions and answers!</p>
+                    <p class="alert-text">Only the users who are logged in can post questions, answers, and vote!</p>
                     <button id="go-to-login">Login</button>
                 </div>
             </div>
@@ -72,6 +74,42 @@ var QuestionDetailView = Backbone.View.extend({
     
     closeLoginPrompt: function() {
         $('#login-modal-overlay').remove(); 
+    },
+
+    incrementVote: function(event) {
+        var self = this;
+        var answerId = $(event.currentTarget).data('id');
+        checkLoginStatus(function(isLoggedIn) {
+            if (isLoggedIn) {
+                $.post(`http://localhost/WestTechQA/api/answers/incrementVote/${answerId}`, {}, function(response) {
+                    if (response.error) {
+                        alert(response.error);
+                    } else {
+                        self.model.fetch();
+                    }
+                })
+            } else {
+                self.showLoginPrompt();
+            }
+        });
+    },
+    
+    decrementVote: function(event) {
+        var self = this;
+        var answerId = $(event.currentTarget).data('id');
+        checkLoginStatus(function(isLoggedIn) {
+            if (isLoggedIn) {
+                $.post(`http://localhost/WestTechQA/api/answers/decrementVote/${answerId}`, {}, function(response) {
+                    if (response.error) {
+                        alert(response.error);
+                    } else {
+                        self.model.fetch();
+                    }
+                })
+            } else {
+                self.showLoginPrompt();
+            }
+        });
     },
 
     render: function() {

@@ -28,9 +28,9 @@
                     <p class="question-answer-info">answered by <strong><%= answer.username %></strong> on <%= answer.formattedDate %></p>
                 </div>
                 <div class="vote-section">
-                    <button class="vote-up">&#9650;</button>
+                    <button class="vote-up" data-id="<%= answer.answer_id %>">&#9650;</button>
                     <span class="vote-count"><%= answer.votes %></span>
-                    <button class="vote-down">&#9660;</button>
+                    <button class="vote-down" data-id="<%= answer.answer_id %>">&#9660;</button>
                 </div>
             </div>
         <% }); %>
