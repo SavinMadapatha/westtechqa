@@ -57,7 +57,8 @@ $route['api/auth/register'] = 'AuthController/register';
 $route['api/auth/login'] = 'AuthController/login';
 $route['api/auth/session'] = 'AuthController/checkSession';
 
-$route['api/questions'] = 'questions/index';
+$route['api/questions'] = 'questions/allQuestions';
 $route['api/questions/(:num)'] = 'questions/getQuestion/$1';
 $route['api/questions/addQuestion'] = 'questions/postQuestion';
-
+$route['api/answers/addAnswer'] = 'answers/postAnswer';
+$route['api/answers/(:num)/details'] = 'answers/getQuestion/$1';

@@ -50,12 +50,12 @@ class Question_model extends CI_Model {
 
         // Add the answers and tags to the question array
         $question['answers'] = $answers;
-        $question['tags'] = array_column($tags, 'tag_name'); // Flatten the tags array
+        $question['tags'] = array_column($tags, 'tag_name'); 
 
         return $question;
     }
 
-    // Add a new question
+    // Add new question
     public function set_question($data) {
         $this->db->insert('Question', $data);
         return $this->db->insert_id(); 

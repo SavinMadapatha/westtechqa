@@ -16,16 +16,27 @@ var QuestionDetailView = Backbone.View.extend({
 
     events: {
         'click #ask-question-btn': 'askQuestion',
+        'click #add-answer-btn': 'addAnswer', 
         'click #go-to-login': 'redirectToLogin',
         'click .close-modal-btn': 'closeLoginPrompt'
     },
 
     askQuestion: function(event) {
         event.preventDefault();
+        this.handleAction('ask');
+    },
+
+    addAnswer: function(event) {
+        event.preventDefault();
+        this.handleAction('answer');
+    },
+
+    handleAction: function(actionType) {
         var self = this;
         checkLoginStatus(function(isLoggedIn) {
             if (isLoggedIn) {
-                Backbone.history.navigate('ask', { trigger: true });
+                var navigateTo = actionType === 'ask' ? 'ask' : 'questions/' + self.questionId + '/answer';
+                Backbone.history.navigate(navigateTo, { trigger: true });
             } else {
                 self.showLoginPrompt();
             }
@@ -38,7 +49,7 @@ var QuestionDetailView = Backbone.View.extend({
             <div class="login-modal-overlay" id="login-modal-overlay">
                 <div class="login-modal">
                     <span class="close-modal-btn">&#10005;</span> 
-                    <p class="alert-text">Only the users who are logged in can post questions!</p>
+                    <p class="alert-text">Only the users who are logged in can post questions and answers!</p>
                     <button id="go-to-login">Login</button>
                 </div>
             </div>
@@ -85,5 +96,4 @@ var QuestionDetailView = Backbone.View.extend({
         console.log('Rendered Question Detail View');
         return this;
     }
-    
 });

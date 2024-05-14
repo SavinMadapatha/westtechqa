@@ -36,7 +36,7 @@ var PostQuestionView = Backbone.View.extend({
                 self.model.save(null, {
                     success: function(model, response) {
                         console.log('Question posted successfully');
-                        Backbone.history.navigate('questions', {trigger: true});
+                        Backbone.history.navigate('questions/' + response.question_id, {trigger: true});
                     },
                     error: function(model, response) {
                         console.log('Failed to post question', response);

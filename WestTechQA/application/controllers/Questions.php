@@ -12,7 +12,7 @@ class Questions extends REST_Controller {
         $this->load->helper('url');
     }
 
-    public function index_get() {
+    public function allQuestions_get() {
         $questions = $this->question_model->get_questions();
         $this->response($questions, REST_Controller::HTTP_OK);
     }
@@ -43,10 +43,11 @@ class Questions extends REST_Controller {
                 $tag_id = $this->tag_model->ensureTagExists($tag);
                 $this->tag_model->linkTagToQuestion($tag_id, $question_id); 
             }
-            $this->response(['message' => 'Question created successfully'], REST_Controller::HTTP_CREATED);
+            $this->response(['message' => 'Question created successfully', 'question_id' => $question_id], REST_Controller::HTTP_CREATED);
         } else {
             $this->response(['error' => 'Failed to create question'], REST_Controller::HTTP_BAD_REQUEST);
         }
     }
     
 }
+?>
