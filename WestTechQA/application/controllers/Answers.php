@@ -101,5 +101,19 @@ class Answers extends REST_Controller {
             $this->response(['error' => 'Failed to accept answer'], REST_Controller::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
+
+    public function getAnswer_get($answer_id = NULL) {
+        if (!$answer_id) {
+            $this->response(['error' => 'Missing answer ID'], REST_Controller::HTTP_BAD_REQUEST);
+            return;
+        }
+    
+        $answer = $this->answer_model->get_answer_with_details($answer_id);
+        if ($answer) {
+            $this->response($answer, REST_Controller::HTTP_OK);
+        } else {
+            $this->response(['error' => 'Answer not found'], REST_Controller::HTTP_NOT_FOUND);
+        }
+    }
 }
 ?>

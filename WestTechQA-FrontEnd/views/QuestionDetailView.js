@@ -22,6 +22,7 @@ var QuestionDetailView = Backbone.View.extend({
         'click .vote-up': 'incrementVote',
         'click .vote-down': 'decrementVote',
         'change .accept-answer': 'acceptAnswer',
+        'click .question-answer-content': 'navigateToAnswerDetail'
     },
 
     askQuestion: function(event) {
@@ -125,6 +126,11 @@ var QuestionDetailView = Backbone.View.extend({
                 self.model.fetch(); 
             }
         });
+    },
+
+    navigateToAnswerDetail: function(event) {
+        var answerId = $(event.currentTarget).data('id');
+        Backbone.history.navigate('answers/' + answerId, { trigger: true });
     },
 
     render: function() {

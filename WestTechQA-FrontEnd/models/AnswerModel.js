@@ -1,5 +1,5 @@
 var AnswerModel = Backbone.Model.extend({
-  urlRoot: '/api/answers',
+  urlRoot: 'http://localhost/WestTechQA/api/answers',
   defaults: {
     answerID: null,
     questionID: null,

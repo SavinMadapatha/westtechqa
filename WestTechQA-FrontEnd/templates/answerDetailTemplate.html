@@ -1,7 +1,18 @@
 <script type="text/template" id="answer-detail-template">
     <div class="answer-detail-container">
-        <h1>Answer Details</h1>
-        <div class="answer-content"><%= content %></div>
-        <!-- Upcoming comments section -->
+        <div class="answer-header">
+            <h4 class="answer-detail-title">Answer by <%= answer_username %></h4>
+            <span class="answer-posted-info">posted on <%= formattedPostedDate %></span>
+        </div>
+        <p class="answer-main-content"><%= content %></p>
+        <div class="comments-section">
+            <h4><%= commentsCount %> Comments</h4>
+            <% _.each(comments, function(comment) { %>
+                <div class="single-comment">
+                    <p class="comment-detail"><%= comment.content %></p>
+                    <p class="comment-user-info">Comment by <strong><%= comment.commenter_username %></strong> on <%= comment.formattedPostedDate %></p>
+                </div>
+            <% }); %>
+        </div>
     </div>
 </script>

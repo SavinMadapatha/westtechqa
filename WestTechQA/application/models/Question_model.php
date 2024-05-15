@@ -33,7 +33,6 @@ class Question_model extends CI_Model {
         $query = $this->db->get();
         $results = $query->result_array();
     
-        // Process tags for each question
         foreach ($results as $key => $row) {
             $results[$key]['tags'] = explode(',', $row['tags']);
         }

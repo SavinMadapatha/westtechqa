@@ -8,7 +8,8 @@ var AppRouter = Backbone.Router.extend({
         "questions/tag/:tag": "tagFilteredQuestions",
         "questions/:id": "questionDetail",
         "ask": "postQuestion",
-        "questions/:id/answer": "postAnswer"  
+        "questions/:id/answer": "postAnswer",
+        "answers/:id": "answerDetail"  
     },
 
     initialize: function() {
@@ -76,6 +77,12 @@ var AppRouter = Backbone.Router.extend({
         console.log('Navigating to question detail with ID:', id);
         var questionDetailView = new QuestionDetailView({ el: '#app', questionId: id });
         questionDetailView.render();
+    },
+
+    answerDetail: function(id) {
+        this.clearBindedEvents();
+        var answerDetailView = new AnswerDetailView({ el: '#app', answerId: id});
+        answerDetailView.render();
     },
 
     postQuestion: function() {

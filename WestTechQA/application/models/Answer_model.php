@@ -4,7 +4,26 @@ class Answer_model extends CI_Model {
     public function __construct() {
         parent::__construct();
         $this->load->database();
+        $this->load->model('comment_model');
     }
+
+    public function get_answer_with_details($answer_id) {
+        $this->db->select('Answer.*, User.username as answer_username, 
+                           (SELECT COUNT(*) FROM Comment WHERE Comment.answer_id = Answer.answer_id) as comments_count');
+        $this->db->from('Answer');
+        $this->db->join('User', 'User.user_id = Answer.user_id');
+        $this->db->where('Answer.answer_id', $answer_id);
+        $answer = $this->db->get()->row_array();
+    
+        if (!$answer) return null;
+        
+        $comments = $this->comment_model->get_comments_for_answer($answer_id);
+        $answer['comments'] = $comments;
+    
+        return $answer;
+    }
+    
+    
 
     // Add new answer
     public function set_answer($data) {

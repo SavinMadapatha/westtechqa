@@ -28,7 +28,7 @@
                            <%= answer.accepted === "1" ? 'checked disabled' : '' %>/>
                 <% } %>
                 <div class="answer-content">
-                    <p class="question-answer-content"><%= answer.content %></p>
+                    <p class="question-answer-content" data-id="<%= answer.answer_id %>"><%= answer.content %></p>
                     <p class="question-answer-info">answered by <strong><%= answer.username %></strong> on <%= answer.formattedDate %></p>
                 </div>
                 <div class="vote-section">
