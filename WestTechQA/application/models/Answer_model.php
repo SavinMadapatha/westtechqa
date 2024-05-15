@@ -10,7 +10,6 @@ class Answer_model extends CI_Model {
     public function set_answer($data) {
         $insert = $this->db->insert('Answer', $data);
         return $this->db->insert_id(); 
-
     }
 
     // Increment vote count
@@ -71,6 +70,35 @@ class Answer_model extends CI_Model {
         $this->db->where('answer_id', $answer_id);
         $result = $this->db->get()->row();
         return $result ? $result->votes : 0;
+    }
+
+    // Accept an answer
+    public function accept_answer($answer_id, $user_id) {
+        $this->db->where('answer_id', $answer_id);
+        return $this->db->update('Answer', ['accepted' => 1]);
+    }
+
+    public function get_question_id_by_answer($answer_id) {
+        $this->db->select('question_id');
+        $this->db->from('Answer');
+        $this->db->where('answer_id', $answer_id);
+        $query = $this->db->get();
+        
+        if ($query->num_rows() > 0) {
+            return $query->row()->question_id; 
+        }
+        
+        return null;
+    }
+
+    // Check if the user is the creator of the question linked to the answer
+    public function is_creator($user_id, $answer_id) {
+        $this->db->select('Question.user_id');
+        $this->db->from('Question');
+        $this->db->join('Answer', 'Answer.question_id = Question.question_id');
+        $this->db->where('Answer.answer_id', $answer_id);
+        $query = $this->db->get()->row();
+        return ($query && $query->user_id == $user_id);
     }
 }
 ?>

@@ -574,6 +574,36 @@ header h1 {
   position: relative;
 }
 
+.accept-answer {
+  display: inline-block;
+  margin-left: 10px;
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+  appearance: none;
+  background-color: #fff;
+  border: 2px solid #ccc;
+  border-radius: 4px;
+  position: relative;
+}
+
+.accept-answer:checked {
+  background-color: #28a745;
+  border-color: #28a745;
+}
+
+.accept-answer:checked:after {
+  content: "";
+  position: absolute;
+  left: 4px;
+  top: 1px;
+  width: 6px;
+  height: 11px;
+  border: solid white;
+  border-width: 0 3px 3px 0;
+  transform: rotate(45deg);
+}
+
 .answer-content {
   margin-top: 20px;
   margin-left: 20px;

@@ -20,7 +20,8 @@ var QuestionDetailView = Backbone.View.extend({
         'click #go-to-login': 'redirectToLogin',
         'click .close-modal-btn': 'closeLoginPrompt',
         'click .vote-up': 'incrementVote',
-        'click .vote-down': 'decrementVote'
+        'click .vote-down': 'decrementVote',
+        'change .accept-answer': 'acceptAnswer',
     },
 
     askQuestion: function(event) {
@@ -112,6 +113,20 @@ var QuestionDetailView = Backbone.View.extend({
         });
     },
 
+    acceptAnswer: function(event) {
+        console.log("Checkbox change event triggered");
+        var answerId = $(event.currentTarget).data('id');
+        var self = this;
+        console.log(answerId);
+        $.post(`http://localhost/WestTechQA/api/answers/accept`, { answer_id: answerId }, function(response) {
+            if (response.error) {
+                alert(response.error);
+            } else {
+                self.model.fetch(); 
+            }
+        });
+    },
+
     render: function() {
         if (!this.template) {
             console.log('Template not yet loaded.');
@@ -119,6 +134,7 @@ var QuestionDetailView = Backbone.View.extend({
         }
     
         var data = this.model.toJSON();
+        console.log(data);
     
         data.formattedDate = new Date(data.posted_date.replace(' ', 'T') + 'Z').toLocaleDateString();
     

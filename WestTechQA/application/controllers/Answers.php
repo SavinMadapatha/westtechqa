@@ -79,6 +79,27 @@ class Answers extends REST_Controller {
         } else {
             $this->response(['error' => 'Cannot vote more than once or vote below zero!'], REST_Controller::HTTP_OK);
         }
-    }    
+    }   
+    
+    public function acceptAnswer_post() {
+        $user_id = $this->session->userdata('logged_in');
+        $answer_id = $this->post('answer_id');
+    
+        if (!$user_id) {
+            $this->response(['error' => 'Unauthorized'], REST_Controller::HTTP_UNAUTHORIZED);
+            return;
+        }
+    
+        // Verify that the user is the question's creator
+        $question_id = $this->answer_model->get_question_id_by_answer($answer_id);
+        $is_creator = $this->answer_model->is_creator($user_id, $question_id);
+    
+        $result = $this->answer_model->accept_answer($answer_id, $user_id);
+        if ($result) {
+            $this->response(['message' => 'Answer accepted'], REST_Controller::HTTP_OK);
+        } else {
+            $this->response(['error' => 'Failed to accept answer'], REST_Controller::HTTP_INTERNAL_SERVER_ERROR);
+        }
+    }
 }
 ?>

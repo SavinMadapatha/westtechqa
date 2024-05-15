@@ -23,6 +23,10 @@
         </div>
         <% _.each(answers, function(answer) { %>
             <div class="question-answer-item">
+                <% if (answer.accepted === "1" || (isCreator && !isAnyAnswerAccepted)) { %>
+                    <input type="checkbox" class="accept-answer" data-id="<%= answer.answer_id %>"
+                           <%= answer.accepted === "1" ? 'checked disabled' : '' %>/>
+                <% } %>
                 <div class="answer-content">
                     <p class="question-answer-content"><%= answer.content %></p>
                     <p class="question-answer-info">answered by <strong><%= answer.username %></strong> on <%= answer.formattedDate %></p>

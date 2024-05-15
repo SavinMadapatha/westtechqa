@@ -43,34 +43,46 @@ class Question_model extends CI_Model {
 
     // Get a single question by ID
     public function get_question_with_details($id) {
-        $this->db->select('Question.*, User.username');
+        $this->db->select('Question.*, User.username, User.user_id as question_user_id');
         $this->db->from('Question');
         $this->db->join('User', 'User.user_id = Question.user_id');
         $this->db->where('question_id', $id);
         $question = $this->db->get()->row_array();
-
+    
         if (!$question) return null;
-
+    
         // Get the answers and user info for each answer
-        $this->db->select('Answer.*, User.username');
+        $this->db->select('Answer.*, User.username, Answer.accepted');
         $this->db->from('Answer');
         $this->db->join('User', 'User.user_id = Answer.user_id');
         $this->db->where('question_id', $id);
         $answers = $this->db->get()->result_array();
 
+        // Checking if an answer has been accepted for the question
+        $isAnyAnswerAccepted = false;
+        foreach ($answers as $answer) {
+            if ($answer['accepted']) {
+                $isAnyAnswerAccepted = true;
+                break;
+            }
+        }
+    
         // Get the tags for the question
         $this->db->select('Tag.tag_name');
         $this->db->from('QuestionTag');
         $this->db->join('Tag', 'Tag.tag_id = QuestionTag.tag_id');
         $this->db->where('question_id', $id);
         $tags = $this->db->get()->result_array();
-
+    
         // Add the answers and tags to the question array
         $question['answers'] = $answers;
-        $question['tags'] = array_column($tags, 'tag_name'); 
+        $question['tags'] = array_column($tags, 'tag_name');
+        $question['isCreator'] = ($this->session->userdata('logged_in') == $question['question_user_id']);  
+        $question['isAnyAnswerAccepted'] = $isAnyAnswerAccepted;  
 
+    
         return $question;
-    }
+    }    
 
     // Add new question
     public function set_question($data) {
