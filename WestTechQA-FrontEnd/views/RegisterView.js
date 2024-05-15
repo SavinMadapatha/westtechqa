@@ -11,7 +11,7 @@ var RegisterView = Backbone.View.extend({
                 var templateHtml = $(data).filter('#register-template').html();
                 if (templateHtml) {
                     self.template = _.template(templateHtml);
-                    self.render(); 
+                    self.render();
                 } else {
                     console.error('Register template content not found.');
                 }
@@ -27,25 +27,39 @@ var RegisterView = Backbone.View.extend({
 
     register: function(e) {
         e.preventDefault();
-
-        var username = this.$('#inputUsername').val();
-        var email = this.$('#inputEmail').val();
-        var password = this.$('#inputPassword').val();
-
-        this.model.set({username: username, email: email, password: password});
-
-        this.model.save({}, {
-            success: function(model, response) {
-                if(response.status === 'success') {
-                    alert('Registration successful');
-                    appRouter.navigate('', {trigger: true});
+        var self = this;
+        var username = this.$('#inputUsername').val().trim();
+        var email = this.$('#inputEmail').val().trim();
+        var password = this.$('#inputPassword').val().trim();
+    
+        if (!username || !email || !password) {
+            alert("Please fill all the fields correctly.");
+            return;
+        }
+    
+        var userData = {
+            username: username,
+            email: email,
+            password: password
+        };
+    
+        $.ajax({
+            type: 'POST',
+            url: 'http://localhost/WestTechQA/api/auth/register',
+            data: JSON.stringify(userData),
+            contentType: 'application/json',
+            dataType: 'json',
+            success: function(response) {
+                if (response.success) { 
+                    console.log('Registration successful');
+                    appRouter.navigate('login', {trigger: true});
                 } else {
-                    alert('Registration failed: ' + response.message);
+                    console.log('Registration failed');
                 }
             },
-            error: function(model, response) {
-                console.log('Registration failed with response:', response);
-                alert('Registration failed.'); 
+            error: function(error) {
+                console.log('Registration failed:', error);
+                alert('Registration failed: The Username field must be at least 5 characters in length. The Password field must be at least 8 characters in length.');
             }
         });
     },

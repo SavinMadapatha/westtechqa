@@ -83,13 +83,21 @@ var QuestionDetailView = Backbone.View.extend({
         var answerId = $(event.currentTarget).data('id');
         checkLoginStatus(function(isLoggedIn) {
             if (isLoggedIn) {
-                $.post(`http://localhost/WestTechQA/api/answers/incrementVote/${answerId}`, {}, function(response) {
-                    if (response.error) {
-                        alert(response.error);
-                    } else {
-                        self.model.fetch();
+                $.ajax({
+                    type: 'POST',
+                    url: `http://localhost/WestTechQA/api/answers/incrementVote/${answerId}`,
+                    success: function(response) {
+                        if (response.message) {
+                            console.log(response.message);
+                            self.model.fetch();
+                        } else {
+                            alert(response.error);
+                        }
+                    },
+                    error: function() {
+                        console.log('Failed to connect to the server.');
                     }
-                })
+                });
             } else {
                 self.showLoginPrompt();
             }
@@ -101,32 +109,54 @@ var QuestionDetailView = Backbone.View.extend({
         var answerId = $(event.currentTarget).data('id');
         checkLoginStatus(function(isLoggedIn) {
             if (isLoggedIn) {
-                $.post(`http://localhost/WestTechQA/api/answers/decrementVote/${answerId}`, {}, function(response) {
-                    if (response.error) {
-                        alert(response.error);
-                    } else {
-                        self.model.fetch();
+                $.ajax({
+                    type: 'POST',
+                    url: `http://localhost/WestTechQA/api/answers/decrementVote/${answerId}`,
+                    success: function(response) {
+                        if (response.message) {
+                            console.log(response.message);
+                            self.model.fetch();
+                        } else {
+                            alert(response.error);
+                        }
+                    },
+                    error: function() {
+                        console.log('Failed to connect to the server.');
                     }
-                })
+                });
             } else {
                 self.showLoginPrompt();
             }
         });
     },
-
+    
     acceptAnswer: function(event) {
-        console.log("Checkbox change event triggered");
         var answerId = $(event.currentTarget).data('id');
         var self = this;
-        console.log(answerId);
-        $.post(`http://localhost/WestTechQA/api/answers/accept`, { answer_id: answerId }, function(response) {
-            if (response.error) {
-                alert(response.error);
+        checkLoginStatus(function(isLoggedIn) {
+            if (isLoggedIn) {
+                $.ajax({
+                    type: 'POST',
+                    url: `http://localhost/WestTechQA/api/answers/accept`,
+                    data: JSON.stringify({ answer_id: answerId }),
+                    contentType: 'application/json',
+                    success: function(response) {
+                        if (response.message) {
+                            console.log(response.message);
+                            self.model.fetch(); 
+                        } else {
+                            console.log(response.error);
+                        }
+                    },
+                    error: function() {
+                        console.log('Failed to connect to the server.');
+                    }
+                });
             } else {
-                self.model.fetch(); 
+                self.showLoginPrompt();
             }
         });
-    },
+    },    
 
     navigateToAnswerDetail: function(event) {
         var answerId = $(event.currentTarget).data('id');

@@ -31,18 +31,22 @@ var LoginView = Backbone.View.extend({
         var password = this.$('#inputPassword').val();
         this.model.set({email: email, password: password});
 
-        this.model.save({}, {
-            success: function(model, response) {
-                if(response.status === 'success') {
+        $.ajax({
+            type: 'POST',
+            url: 'http://localhost/WestTechQA/api/auth/login',  
+            data: JSON.stringify({email: email, password: password}),
+            contentType: 'application/json',
+            dataType: 'json',
+            success: function(response) {
+                if (response.status === 'success') {
                     Backbone.trigger('loginSuccess'); 
                     appRouter.navigate('questions', {trigger: true});
                 } else {
-                    alert(response.message); 
+                    console.log(response.message); 
                 }
             },
-            error: function(model, response) {
-                console.log('Login failed with response:', response.responseText);
-                alert('Login failed.'); 
+            error: function(response) {
+                alert('Login failed: Wrong password or username, try again!');
             }
         });
     },
@@ -53,5 +57,4 @@ var LoginView = Backbone.View.extend({
         }
         return this;
     }
-
 });

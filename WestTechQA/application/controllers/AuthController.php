@@ -19,37 +19,37 @@ class AuthController extends REST_Controller {
     public function register_post() {
         $json = file_get_contents('php://input');
         $data = json_decode($json);
-
+    
         // Validate the input data
         $this->form_validation->set_data((array)$data);
         $this->form_validation->set_rules('username', 'Username', 'required|alpha_numeric|min_length[5]|is_unique[User.username]');
         $this->form_validation->set_rules('email', 'Email', 'required|valid_email|is_unique[User.email]');
-        $this->form_validation->set_rules('password', 'Password', 'required|min_length[8]');
-
+        $this->form_validation->set_rules('password', 'Password', 'required|min_length[6]');
+    
         if ($this->form_validation->run() === FALSE) {
             $this->output->set_status_header(400);
-            $this->response(['status' => 'error', 'message' => validation_errors()], REST_Controller::HTTP_BAD_REQUEST);
+            $this->response(['success' => false, 'message' => validation_errors()], REST_Controller::HTTP_BAD_REQUEST);
             return;
         }
-
+    
         // Hash password for better security
         $hashedPassword = password_hash($data->password, PASSWORD_DEFAULT);
-
+    
         $userData = [
             'username' => $data->username,
             'email' => $data->email,
             'password' => $hashedPassword,
             'registered_date' => date('Y-m-d H:i:s')  
         ];
-
+    
         // Insert user into the database
         if ($this->User_model->insert_user($userData)) {
-            $this->response(['status' => 'success', 'message' => 'Registration successful'], REST_Controller::HTTP_OK);
+            $this->response(['success' => true, 'message' => 'Registration successful'], REST_Controller::HTTP_OK);
         } else {
             $this->output->set_status_header(500);
-            $this->response(['status' => 'error', 'message' => 'Failed to register user'], REST_Controller::HTTP_BAD_REQUEST);
+            $this->response(['success' => false, 'message' => 'Failed to register user'], REST_Controller::HTTP_INTERNAL_SERVER_ERROR);
         }
-    }
+    }    
 
     // this function verifies the login user credentials and returns the status of the login attempt.
     public function login_post() {
