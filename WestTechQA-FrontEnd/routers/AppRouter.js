@@ -81,7 +81,7 @@ var AppRouter = Backbone.Router.extend({
 
     answerDetail: function(id) {
         this.clearBindedEvents();
-        var answerDetailView = new AnswerDetailView({ el: '#app', answerId: id});
+        var answerDetailView = new AnswerDetailView({ el: '#app', answerId: id });
         answerDetailView.render();
     },
 

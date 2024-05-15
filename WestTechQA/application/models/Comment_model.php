@@ -15,5 +15,10 @@ class Comment_model extends CI_Model {
 
         return $query->result_array();
     }
+
+    // Add a new comment
+    public function add_comment($data) {
+        return $this->db->insert('Comment', $data);
+    }
 }
 ?>

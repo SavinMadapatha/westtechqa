@@ -23,36 +23,43 @@ var PostAnswerView = Backbone.View.extend({
         event.preventDefault();
         var self = this;
         var answerContent = this.$('textarea[name="inputanswer"]').val().trim();
-        
+    
         checkLoginStatus(function(isLoggedIn, userId) {
             if (!isLoggedIn) {
-                alert("You must be logged in to post an answer.");
+                console.log("You must be logged in to post an answer.");
                 return;
             }
-            
-            var answerData = {
+    
+            if (!answerContent) {
+                console.log("Please enter some content for the answer.");
+                return;
+            }
+    
+            var answerData = JSON.stringify({
                 question_id: self.questionId,
                 user_id: userId,
                 content: answerContent
-            };
-
-            self.model.set(answerData);
-            
-            if (self.model.isValid()) {
-                self.model.save(null, {
-                    success: function(model, response) {
+            });
+    
+            $.ajax({
+                type: 'POST',
+                url: 'http://localhost/WestTechQA/api/answers/addAnswer',
+                data: answerData,
+                contentType: 'application/json',  
+                dataType: 'json', 
+                success: function(response) {
+                    if (response.success) {
                         console.log('Answer posted successfully');
-                        self.model.clear(); 
                         Backbone.history.navigate('questions/' + self.questionId, {trigger: true});
                         window.location.reload();
-                    },  
-                    error: function(model, response) {
-                        console.error('Failed to post answer:', response.responseText);
+                    } else {
+                        console.log('Failed to post answer: ' + (response.error || 'Unknown error'));
                     }
-                });
-            } else {
-                console.log('Validation failed', self.model.validationError);
-            }
+                },
+                error: function(xhr) {
+                    console.log('Failed to connect to the server: ' + xhr.responseText);
+                }
+            });
         });
     },
 

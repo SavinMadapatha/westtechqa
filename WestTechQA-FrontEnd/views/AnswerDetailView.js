@@ -14,6 +14,36 @@ var AnswerDetailView = Backbone.View.extend({
         });
     },
 
+    events: {
+        "click .btn-add-comment": "postComment"
+    },
+
+    postComment: function() {
+        var commentContent = this.$('.comment-input').val().trim();
+        console.log(this.answerId, commentContent);
+        if (commentContent) {
+            $.ajax({
+                type: 'POST',
+                url: 'http://localhost/WestTechQA/api/comments/addComment',
+                data: { answer_id: this.answerId, content: commentContent },
+                success: function(response) {
+                    if (response.success) {
+                        console.log('Comment added successfully');
+                        this.model.fetch();  
+                    } else {
+                        console.log('Error adding comment: ' + (response.error || 'Unknown error!'));
+                    }
+                }.bind(this),
+                error: function() {
+                    console.log('Failed to connect to the server.');
+                },
+                dataType: 'json'
+            });
+        } else {
+            console.log('Please enter a comment');
+        }
+    },
+
     render: function() {
         if (!this.template) {
             console.log('Template not yet loaded.');

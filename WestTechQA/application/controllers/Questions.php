@@ -30,7 +30,7 @@ class Questions extends REST_Controller {
 
     public function postQuestion_post() {
         if (!$this->session->userdata('logged_in')) {
-            $this->response(['error' => 'Unauthorized'], REST_Controller::HTTP_UNAUTHORIZED);
+            $this->response(['success' => false, 'error' => 'Unauthorized'], REST_Controller::HTTP_UNAUTHORIZED);
             return;
         }
     
@@ -45,9 +45,9 @@ class Questions extends REST_Controller {
                 $tag_id = $this->tag_model->ensureTagExists($tag);
                 $this->tag_model->linkTagToQuestion($tag_id, $question_id); 
             }
-            $this->response(['message' => 'Question created successfully', 'question_id' => $question_id], REST_Controller::HTTP_CREATED);
+            $this->response(['success' => true, 'message' => 'Question created successfully', 'question_id' => $question_id], REST_Controller::HTTP_CREATED);
         } else {
-            $this->response(['error' => 'Failed to create question'], REST_Controller::HTTP_BAD_REQUEST);
+            $this->response(['success' => false, 'error' => 'Failed to create question'], REST_Controller::HTTP_BAD_REQUEST);
         }
     }
     

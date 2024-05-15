@@ -12,6 +12,8 @@ class Answers extends REST_Controller {
         $this->load->model('question_model');
     }
 
+    // this function fetches questions based on the id: if null fetches all the questions
+    // othwerwise fetches the specific question with details
     public function getQuestion_get($id) {
         if (!$id) {
             $this->response(['error' => 'Missing question ID'], REST_Controller::HTTP_BAD_REQUEST);
@@ -28,31 +30,60 @@ class Answers extends REST_Controller {
     
     // this function receives the data related to new answer and saves the answer in the db
     public function postAnswer_post() {
-        log_message('debug', 'postAnswer_post method called.');
         $user_id = $this->session->userdata('logged_in');
         if (!$user_id) {
-            $this->response(['error' => 'Unauthorized'], REST_Controller::HTTP_UNAUTHORIZED);
+            $this->response(['success' => false, 'error' => 'Unauthorized'], REST_Controller::HTTP_UNAUTHORIZED);
             return;
         }
-        
     
         $data = json_decode(file_get_contents('php://input'), true);
         if (!$data) {
-            $this->response(['error' => 'Invalid input provided'], REST_Controller::HTTP_BAD_REQUEST);
+            $this->response(['success' => false, 'error' => 'Invalid input provided'], REST_Controller::HTTP_BAD_REQUEST);
             return;
         }
     
         $data['user_id'] = $user_id;
-        $data['question_id'] = $this->post('question_id');  
+        $data['question_id'] = $this->post('question_id');
         $data['content'] = $this->post('content');
     
         if ($answer_id = $this->answer_model->set_answer($data)) {
-            $this->response(['message' => 'Answer created successfully', 'id' => $answer_id], REST_Controller::HTTP_CREATED);
+            $this->response(['success' => true, 'message' => 'Answer created successfully', 'id' => $answer_id], REST_Controller::HTTP_CREATED);
         } else {
-            $this->response(['error' => 'Failed to create answer'], REST_Controller::HTTP_INTERNAL_SERVER_ERROR);
+            $this->response(['success' => false, 'error' => 'Failed to create answer'], REST_Controller::HTTP_INTERNAL_SERVER_ERROR);
+        }
+    }
+    
+
+    // this function receives the data related to a new comment for an answer and saves the comment in the db
+    public function postComment_post() {
+        $answer_id = $this->post('answer_id');
+        $user_id = $this->session->userdata('logged_in');
+
+        if (!$user_id) {
+            $this->response(['error' => 'Unauthorized'], REST_Controller::HTTP_UNAUTHORIZED);
+            return;
+        }
+
+        $content = $this->post('content');
+        if (!$content) {
+            $this->response(['error' => 'No content provided'], REST_Controller::HTTP_BAD_REQUEST);
+            return;
+        }
+
+        $comment_data = [
+            'answer_id' => $answer_id,
+            'user_id' => $user_id,
+            'content' => $content
+        ];
+
+        if ($this->comment_model->add_comment($comment_data)) {
+            $this->response(['success' => true, 'message' => 'Comment added successfully'], REST_Controller::HTTP_CREATED);
+        } else {
+            $this->response(['success' => false, 'error' => 'Failed to add comment'], REST_Controller::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
+    // this function handles incrementing vote for an answer
     public function incrementVote_post($answer_id) {
         $user_id = $this->session->userdata('logged_in');
         if (!$user_id) {
@@ -67,6 +98,7 @@ class Answers extends REST_Controller {
         }
     }
     
+    // this function handles decrementing vote for an answer
     public function decrementVote_post($answer_id) {
         $user_id = $this->session->userdata('logged_in');
         if (!$user_id) {
@@ -81,6 +113,7 @@ class Answers extends REST_Controller {
         }
     }   
     
+    // this function handles the answer accepting mechanism 
     public function acceptAnswer_post() {
         $user_id = $this->session->userdata('logged_in');
         $answer_id = $this->post('answer_id');
@@ -102,6 +135,7 @@ class Answers extends REST_Controller {
         }
     }
 
+    // this function fetches an answer with details (with comments)
     public function getAnswer_get($answer_id = NULL) {
         if (!$answer_id) {
             $this->response(['error' => 'Missing answer ID'], REST_Controller::HTTP_BAD_REQUEST);
