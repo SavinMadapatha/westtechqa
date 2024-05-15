@@ -1,10 +1,26 @@
 html,
 body {
+  height: 100%;
   margin: 0;
   padding: 0;
   overflow: hidden;
   font-family: "Arial", sans-serif;
-  overflow: auto;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+}
+
+header,
+main {
+  width: 100%;
+}
+
+main {
+  flex-grow: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 
 /* Navbar Styles */
@@ -265,16 +281,24 @@ body {
 }
 
 /* login page styles */
-.form-signin {
+.login-page-container {
+  overflow-y: unset;
   position: fixed;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+  width: 340px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   background: #fff;
   padding: 30px;
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-  width: 340px;
+}
+
+.form-signin {
+  width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -308,10 +332,6 @@ body {
   background-color: #0056b3;
 }
 
-.login-link {
-  margin-top: 20px;
-}
-
 .registration-link {
   text-align: center;
   margin-top: 25px;
@@ -323,6 +343,22 @@ body {
 }
 
 .registration-link a:hover {
+  text-decoration: underline;
+}
+
+.password-reset {
+  position: relative;
+  margin-top: 460px;
+  margin-left: 570px;
+}
+
+.password-reset a {
+  color: #007bff;
+  text-decoration: none;
+}
+
+.password-reset a:hover {
+  color: #007bff;
   text-decoration: underline;
 }
 
@@ -349,7 +385,6 @@ header h1 {
 #app {
   padding: 20px;
   background: #e9e9e9;
-  min-height: 100vh;
   overflow-y: auto;
 }
 

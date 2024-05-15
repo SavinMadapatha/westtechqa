@@ -103,5 +103,36 @@ class AuthController extends REST_Controller {
         $this->session->sess_destroy();
         $this->response(['status' => 'success', 'message' => 'Logged out successfully'], REST_Controller::HTTP_OK);
     }
+
+    // this function handles the password reset functionality
+    public function resetPassword_post() {
+        $json = file_get_contents('php://input');
+        $data = json_decode($json);
+    
+        $this->form_validation->set_data((array)$data);
+        $this->form_validation->set_rules('email', 'Email', 'required|valid_email');
+        $this->form_validation->set_rules('username', 'Username', 'required');
+        $this->form_validation->set_rules('joined_date', 'Joined Date', 'required');
+        $this->form_validation->set_rules('new_password', 'New Password', 'required|min_length[6]');
+    
+        if ($this->form_validation->run() === FALSE) {
+            $this->response(['success' => false, 'message' => validation_errors()], REST_Controller::HTTP_BAD_REQUEST);
+            return;
+        }
+    
+        $user = $this->User_model->get_user_by_reset_info($data->username, $data->email, $data->joined_date);
+        if (!$user) {
+            $this->response(['success' => false, 'message' => 'No matching user found.'], REST_Controller::HTTP_NOT_FOUND);
+            return;
+        }
+    
+        $hashedPassword = password_hash($data->new_password, PASSWORD_DEFAULT);
+        if ($this->User_model->update_user_password($user->user_id, $hashedPassword)) {
+            $this->response(['success' => true, 'message' => 'Password reset successfully.'], REST_Controller::HTTP_OK);
+        } else {
+            $this->response(['success' => false, 'message' => 'Failed to reset password.'], REST_Controller::HTTP_INTERNAL_SERVER_ERROR);
+        }
+    }
+    
 }
 ?>
