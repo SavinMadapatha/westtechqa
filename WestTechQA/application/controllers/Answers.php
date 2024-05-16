@@ -16,6 +16,7 @@ class Answers extends REST_Controller {
     // othwerwise fetches the specific question with details
     public function getQuestion_get($id) {
         if (!$id) {
+            log_message('error', 'Missing question ID for getQuestion');
             $this->response([
                 'error' => 'Missing question ID'
             ], REST_Controller::HTTP_BAD_REQUEST);
@@ -36,6 +37,7 @@ class Answers extends REST_Controller {
     public function postAnswer_post() {
         $user_id = $this->session->userdata('logged_in');
         if (!$user_id) {
+            log_message('error', 'Unauthorized access attempt in postAnswer');
             $this->response([
                 'success' => false, 
                 'error' => 'Unauthorized'], REST_Controller::HTTP_UNAUTHORIZED);
@@ -44,6 +46,7 @@ class Answers extends REST_Controller {
     
         $data = json_decode(file_get_contents('php://input'), true);
         if (!$data) {
+            log_message('error', 'Invalid input provided in postAnswer');
             $this->response([
                 'success' => false, 
                 'error' => 'Invalid input provided'
@@ -57,6 +60,7 @@ class Answers extends REST_Controller {
     
         // Checking if the question_id already exists
         if (!$this->question_model->isQuestionExist($data['question_id'])) {
+            log_message('error', 'Non-existent question referenced in postAnswer with ID: ' . $data['question_id']);
             $this->response([
                 'success' => false,
                 'error' => 'Question does not exist'
@@ -71,6 +75,7 @@ class Answers extends REST_Controller {
                 'id' => $answer_id
             ], REST_Controller::HTTP_CREATED);
         } else {
+            log_message('error', 'Failed to create an answer for question ID: ' . $data['question_id']);
             $this->response([
                 'success' => false, 
                 'error' => 'Failed to create answer'
@@ -86,6 +91,7 @@ class Answers extends REST_Controller {
         $user_id = $this->session->userdata('logged_in');
 
         if (!$user_id) {
+            log_message('error', 'Unauthorized access attempt in postAnswer');
             $this->response([
                 'error' => 'Unauthorized'
             ], REST_Controller::HTTP_UNAUTHORIZED);
@@ -112,6 +118,7 @@ class Answers extends REST_Controller {
                 'message' => 'Comment added successfully'
             ], REST_Controller::HTTP_CREATED);
         } else {
+            log_message('error', 'Failed to add comment for answer ID: ' . $answer_id);
             $this->response([
                 'success' => false, 
                 'error' => 'Failed to add comment'
@@ -123,6 +130,7 @@ class Answers extends REST_Controller {
     public function incrementVote_post($answer_id) {
         $user_id = $this->session->userdata('logged_in');
         if (!$user_id) {
+            log_message('error', 'Unauthorized access attempt in postAnswer');
             $this->response([
                 'error' => 'Unauthorized'
             ], REST_Controller::HTTP_OK);
@@ -134,6 +142,7 @@ class Answers extends REST_Controller {
                 'message' => 'Vote incremented'
             ], REST_Controller::HTTP_OK);
         } else {
+            log_message('error', 'Failed voting attempt in incrementVote');
             $this->response([
                 'error' => 'Cannot vote more than once!'
             ], REST_Controller::HTTP_OK);
@@ -144,6 +153,7 @@ class Answers extends REST_Controller {
     public function decrementVote_post($answer_id) {
         $user_id = $this->session->userdata('logged_in');
         if (!$user_id) {
+            log_message('error', 'Unauthorized access attempt in postAnswer');
             $this->response([
                 'error' => 'Unauthorized'
             ], REST_Controller::HTTP_OK);
@@ -155,6 +165,7 @@ class Answers extends REST_Controller {
                 'message' => 'Vote decremented'
             ], REST_Controller::HTTP_OK);
         } else {
+            log_message('error', 'Failed voting attempt in decrementVote');
             $this->response([
                 'error' => 'Cannot vote more than once or vote below zero!'
             ], REST_Controller::HTTP_OK);
@@ -167,6 +178,7 @@ class Answers extends REST_Controller {
         $answer_id = $this->post('answer_id');
     
         if (!$user_id) {
+            log_message('error', 'Unauthorized access attempt in postAnswer');
             $this->response([
                 'error' => 'Unauthorized'
             ], REST_Controller::HTTP_UNAUTHORIZED);
@@ -183,6 +195,7 @@ class Answers extends REST_Controller {
                 'message' => 'Answer accepted'
             ], REST_Controller::HTTP_OK);
         } else {
+            log_message('error', 'Failed to accept answer for answer ID: ' . $answer_id);
             $this->response([
                 'error' => 'Failed to accept answer'
             ], REST_Controller::HTTP_INTERNAL_SERVER_ERROR);
@@ -192,6 +205,7 @@ class Answers extends REST_Controller {
     // this function fetches an answer with details (with comments)
     public function getAnswer_get($answer_id = NULL) {
         if (!$answer_id) {
+            log_message('error', 'Missing answer ID for getAnswer');
             $this->response([
                 'error' => 'Missing answer ID'
             ], REST_Controller::HTTP_BAD_REQUEST);
@@ -202,6 +216,7 @@ class Answers extends REST_Controller {
         if ($answer) {
             $this->response($answer, REST_Controller::HTTP_OK);
         } else {
+            log_message('error', 'Answer not found with ID: ' . $answer_id);
             $this->response([
                 'error' => 'Answer not found'
             ], REST_Controller::HTTP_NOT_FOUND);

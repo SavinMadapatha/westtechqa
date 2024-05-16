@@ -27,6 +27,7 @@ class AuthController extends REST_Controller {
         $this->form_validation->set_rules('password', 'Password', 'required|min_length[6]');
     
         if ($this->form_validation->run() === FALSE) {
+            log_message('error', 'Registration failed: ' . validation_errors());
             $this->output->set_status_header(400);
             $this->response([
                 'success' => false, 
@@ -52,6 +53,7 @@ class AuthController extends REST_Controller {
                 'message' => 'Registration successful'
             ], REST_Controller::HTTP_OK);
         } else {
+            log_message('error', 'Database insertion failed during registration for user: ' . $data->username);
             $this->output->set_status_header(500);
             $this->response([
                 'success' => false, 
@@ -71,6 +73,7 @@ class AuthController extends REST_Controller {
         $this->form_validation->set_rules('password', 'Password', 'required');
 
         if ($this->form_validation->run() == FALSE) {
+            log_message('error', 'Login validation failed: ' . validation_errors());
             $this->output->set_status_header(400); 
             $this->response([
                 'status' => 'error', 
@@ -85,7 +88,7 @@ class AuthController extends REST_Controller {
         $user = $this->User_model->get_user_by_email($email);
 
         if ($user && password_verify($password, $user['password'])) {
-            // Set user session 
+            // Initialise user session 
             $this->session->set_userdata('logged_in', $user['user_id']);
             
             $this->response([
@@ -94,6 +97,7 @@ class AuthController extends REST_Controller {
                 'user' => $user
             ], REST_Controller::HTTP_OK);
         } else {
+            log_message('error', 'Login failed for user: ' . $email);
             $this->output->set_status_header(401); 
             $this->response([
                 'status' => 'error', 
@@ -103,8 +107,6 @@ class AuthController extends REST_Controller {
     }
 
     public function checkSession_get() {
-        log_message('debug', 'Session Data: ' . print_r($this->session->userdata(), true));
-    
         $response = [
             'logged_in' => false,  
             'status' => 'error',  
@@ -151,6 +153,7 @@ class AuthController extends REST_Controller {
         $this->form_validation->set_rules('new_password', 'New Password', 'required|min_length[6]');
     
         if ($this->form_validation->run() === FALSE) {
+            log_message('error', 'Password reset validation failed: ' . validation_errors());
             $this->response([
                 'success' => false, 
                 'message' => validation_errors()
@@ -160,6 +163,7 @@ class AuthController extends REST_Controller {
     
         $user = $this->User_model->get_user_by_reset_info($data->username, $data->email, $data->joined_date);
         if (!$user) {
+            log_message('error', 'Password reset failed: No matching user found for email ' . $data->email);
             $this->response([
                 'success' => false, 
                 'message' => 'No matching user found.'
@@ -174,6 +178,7 @@ class AuthController extends REST_Controller {
                 'message' => 'Password reset successfully.'
             ], REST_Controller::HTTP_OK);
         } else {
+            log_message('error', 'Failed to update password for user ID: ' . $user->user_id);
             $this->response([
                 'success' => false, 
                 'message' => 'Failed to reset password.'
@@ -183,6 +188,7 @@ class AuthController extends REST_Controller {
 
     public function userProfile_get() {
         if (!$this->session->userdata('logged_in')) {
+            log_message('error', 'Unauthorized access attempt to user profile.');
             $this->response([
                 'success' => false, 
                 'message' => 'Unauthorized access'
@@ -197,6 +203,7 @@ class AuthController extends REST_Controller {
             unset($user['password']); 
             $this->response($user, REST_Controller::HTTP_OK);
         } else {
+            log_message('error', 'User profile not found for user ID: ' . $user_id);
             $this->response([
                 'success' => false, 
                 'message' => 'User not found'
@@ -222,6 +229,7 @@ class AuthController extends REST_Controller {
                 'message' => 'User updated successfully'
             ], REST_Controller::HTTP_OK);
         } else {
+            log_message('error', 'Failed to update user information for user ID: ' . $user_id);
             $this->response([
                 'success' => false,
                 'message' => 'Failed to update user'

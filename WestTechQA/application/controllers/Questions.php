@@ -24,6 +24,7 @@ class Questions extends REST_Controller {
     public function getQuestion_get($id = NULL) {
         $question = $this->question_model->get_question_with_details($id);
         if (!$question) {
+            log_message('error', 'Question not found with ID: ' . $id);
             $this->response([
                 'message' => 'Question not found'
             ], REST_Controller::HTTP_NOT_FOUND);
@@ -35,6 +36,7 @@ class Questions extends REST_Controller {
     // this function handles the post question functionality
     public function postQuestion_post() {
         if (!$this->session->userdata('logged_in')) {
+            log_message('error', 'Unauthorized attempt to post a question');
             $this->response([
                 'success' => false, 'error' => 'Unauthorized'
             ], REST_Controller::HTTP_UNAUTHORIZED);
@@ -54,6 +56,7 @@ class Questions extends REST_Controller {
     
         // Checking if there are any empty mandatory fields
         if (!empty($emptyFields)) {
+            log_message('error', 'Missing fields in question post: ' . implode(', ', $emptyFields));
             $this->response([
                 'success' => false, 
                 'message' => 'Missing or empty required fields',
@@ -74,6 +77,7 @@ class Questions extends REST_Controller {
                 'question_id' => $question_id
             ], REST_Controller::HTTP_CREATED);
         } else {
+            log_message('error', 'Failed to create a question by user ID: ' . $this->session->userdata('logged_in'));
             $this->response(['success' => false, 'error' => 'Failed to create question'], REST_Controller::HTTP_BAD_REQUEST);
         }
     }    
@@ -82,6 +86,7 @@ class Questions extends REST_Controller {
     // this function handles the updates of a question
     public function updateQuestion_put($id) {
         if (!$this->session->userdata('logged_in')) {
+            log_message('error', 'Unauthorized attempt to update a question');
             $this->response([
                 'success' => false, 'error' => 'Unauthorized'
             ], REST_Controller::HTTP_UNAUTHORIZED);
@@ -95,6 +100,7 @@ class Questions extends REST_Controller {
                 'message' => 'Question updated successfully'
             ], REST_Controller::HTTP_OK);
         } else {
+            log_message('error', 'Failed to update question ID: ' . $id);
             $this->response([
                 'success' => false, 
                 'message' => 'Failed to update question'
@@ -106,6 +112,7 @@ class Questions extends REST_Controller {
     public function deleteQuestion_delete($id) {
         $question = $this->question_model->get_question_by_id($id);
         if (!$question) {
+            log_message('error', 'Attempted to delete a non-existent question with ID: ' . $id);
             $this->response([
                 'success' => false,
                 'message' => 'Question not found'
@@ -120,6 +127,7 @@ class Questions extends REST_Controller {
                 'message' => 'Question deleted successfully'
             ], REST_Controller::HTTP_OK);
         } else {
+            log_message('error', 'Failed to delete question ID: ' . $id);
             $this->response([
                 'success' => false,
                 'message' => 'Failed to delete question'
