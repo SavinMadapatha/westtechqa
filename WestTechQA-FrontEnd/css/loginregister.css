@@ -1,0 +1,96 @@
+.login-page-container {
+  overflow-y: unset;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 340px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: #fff;
+  padding: 30px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.form-signin {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.form-signin label {
+  width: 100%;
+  font-size: 14px;
+}
+
+.form-signin input {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 20px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.form-signin button {
+  width: 100%;
+  padding: 10px;
+  border: none;
+  border-radius: 4px;
+  background-color: #007bff;
+  color: white;
+  margin-top: 10px;
+  cursor: pointer;
+}
+
+.form-signin button:hover {
+  background-color: #0056b3;
+}
+
+.registration-link {
+  text-align: center;
+  margin-top: 25px;
+}
+
+.registration-link a {
+  color: #007bff;
+  text-decoration: none;
+}
+
+.registration-link a:hover {
+  text-decoration: underline;
+}
+
+.password-reset {
+  position: relative;
+  margin-top: 460px;
+  margin-left: 570px;
+}
+
+.password-reset a {
+  color: #007bff;
+  text-decoration: none;
+}
+
+.password-reset a:hover {
+  color: #007bff;
+  text-decoration: underline;
+}
+
+.goback-login {
+  position: relative;
+  margin-top: 510px;
+  margin-left: 560px;
+}
+
+.goback-login a {
+  color: #007bff;
+  text-decoration: none;
+}
+
+.goback-login a:hover {
+  color: #007bff;
+  text-decoration: underline;
+}

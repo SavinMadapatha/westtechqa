@@ -1,0 +1,39 @@
+.profile-container {
+  align-content: center;
+  width: 400px;
+  margin: 40px auto;
+  padding: 20px;
+  background: #f9f9f9;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.profile-title {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.profile-details p {
+  margin: 10px 0;
+  font-size: 16px;
+}
+
+.profile-btn {
+  display: inline-block;
+  margin-top: 20px;
+  padding: 8px 16px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+#go-back-btn {
+  background-color: #6c757d;
+}
+
+.profile-btn:hover {
+  opacity: 0.9;
+}
