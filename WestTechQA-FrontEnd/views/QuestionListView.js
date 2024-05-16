@@ -23,8 +23,13 @@ var QuestionListView = Backbone.View.extend({
     },
 
     events: {
+        'click #tech-ask-question-btn': 'navigateToPostQuestion',
         'click .question-title a': 'navigateToDetail',
         'click .question-tag': 'filterByTag'
+    },
+
+    navigateToPostQuestion: function() {
+        Backbone.history.navigate('ask', {trigger: true});
     },
 
     navigateToDetail: function(event) {

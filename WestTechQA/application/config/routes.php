@@ -59,6 +59,9 @@ $route['api/auth/session'] = 'AuthController/checkSession';
 $route['api/auth/logout'] = 'AuthController/logout';
 $route['api/auth/reset'] = 'AuthController/resetPassword';
 
+$route['api/users'] = 'AuthController/userProfile';
+$route['api/user/update'] = 'AuthController/updateUser';
+
 $route['api/questions'] = 'questions/allQuestions';
 $route['api/questions/(:num)'] = 'questions/getQuestion/$1';
 $route['api/questions/addQuestion'] = 'questions/postQuestion';

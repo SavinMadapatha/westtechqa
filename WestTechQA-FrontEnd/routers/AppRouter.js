@@ -9,7 +9,8 @@ var AppRouter = Backbone.Router.extend({
         "questions/:id": "questionDetail",
         "ask": "postQuestion",
         "questions/:id/answer": "postAnswer",
-        "answers/:id": "answerDetail"  
+        "answers/:id": "answerDetail",
+        "profile": 'showProfile'
     },
 
     initialize: function() {
@@ -52,6 +53,20 @@ var AppRouter = Backbone.Router.extend({
         registerView = new RegisterView({ el: '#app' });
         registerView.render();
     },
+
+    showProfile: function() {
+        var userModel = new UserModel();
+        userModel.fetch({
+            success: function(model) {
+                var profileView = new ProfileView({ el: '#app', model: model });
+                profileView.render();
+            },
+            error: function() {
+                console.log('Failed to fetch user data.');
+            }
+        });
+    }
+    ,
 
     questionList: function() {
         this.clearBindedEvents();

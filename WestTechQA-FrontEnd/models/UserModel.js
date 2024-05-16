@@ -1,10 +1,8 @@
 var UserModel = Backbone.Model.extend({
-  urlRoot: '/api/users',
+  urlRoot: 'http://localhost/WestTechQA/api/users',
   defaults: {
-    userID: null,
     username: '',
     email: '',
-    password: '', 
-    registeredDate: null
+    registered_date: null // This should match the JSON response from server
   }
 });

@@ -27,6 +27,13 @@ $(function() {
       });
   });
 
+  $('#profile-btn').on('click', function(event) {
+      event.preventDefault(); 
+      console.log('Navigate to profile page');
+      Backbone.history.navigate('profile', { trigger: true });
+      $('#user-profile-popup').addClass('hidden').css({ visibility: 'hidden', opacity: 0 });
+  });
+
   $('.close-modal-btn').on('click', function() {
       $('#user-profile-popup').addClass('hidden').css({ visibility: 'hidden', opacity: 0 });
   });
@@ -44,11 +51,6 @@ $(function() {
               console.error('Logout failed:', error.responseText);
           }
       });
-  });
-
-  $('#edit-profile-btn').on('click', function() {
-      console.log('Navigate to edit profile page');
-      Backbone.history.navigate('#editProfilePage', { trigger: true });
   });
 
   $('.search-bar button').on('click', function(e) {

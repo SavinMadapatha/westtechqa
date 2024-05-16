@@ -104,22 +104,32 @@ class AuthController extends REST_Controller {
 
     public function checkSession_get() {
         log_message('debug', 'Session Data: ' . print_r($this->session->userdata(), true));
+    
+        $response = [
+            'logged_in' => false,  
+            'status' => 'error',  
+            'message' => 'User not logged-in or session has expired' 
+        ];
+        $http_status = REST_Controller::HTTP_UNAUTHORIZED; 
+    
         if ($this->session->userdata('logged_in')) {
             $user_id = $this->session->userdata('logged_in');
-            $user = $this->User_model->get_user_by_id($user_id); 
-            $this->response([
-                'status' => 'success', 
-                'logged_in' => true, 
-                'user_id' => $user_id,
-                'username' => $user['username'] 
-            ], REST_Controller::HTTP_OK);
-        } else {
-            $this->response([
-                'status' => 'error', 
-                'logged_in' => false
-            ], REST_Controller::HTTP_UNAUTHORIZED);
+            $user = $this->User_model->get_user_by_id($user_id);
+            if ($user) {
+                $response = [
+                    'status' => 'success',
+                    'logged_in' => true,
+                    'user_id' => $user_id,
+                    'username' => $user['username']
+                ];
+                $http_status = REST_Controller::HTTP_OK; 
+            } else {
+                $response['message'] = 'User not found'; 
+            }
         }
+        $this->response($response);
     }
+    
 
     public function logout_post() {
         $this->session->sess_destroy();
@@ -169,6 +179,55 @@ class AuthController extends REST_Controller {
                 'message' => 'Failed to reset password.'
             ], REST_Controller::HTTP_INTERNAL_SERVER_ERROR);
         }
+    }
+
+    public function userProfile_get() {
+        if (!$this->session->userdata('logged_in')) {
+            $this->response([
+                'success' => false, 
+                'message' => 'Unauthorized access'
+            ], REST_Controller::HTTP_UNAUTHORIZED);
+            return;
+        }
+    
+        $user_id = $this->session->userdata('logged_in');
+        $user = $this->User_model->get_user_by_id($user_id);
+    
+        if ($user) {
+            unset($user['password']); 
+            $this->response($user, REST_Controller::HTTP_OK);
+        } else {
+            $this->response([
+                'success' => false, 
+                'message' => 'User not found'
+            ], REST_Controller::HTTP_NOT_FOUND);
+        }
     }    
+
+    public function updateUser_put() {
+        if (!$this->session->userdata('logged_in')) {
+            $this->response([
+                'success' => false, 
+                'message' => 'Unauthorized access'
+            ], REST_Controller::HTTP_UNAUTHORIZED);
+            return;
+        }
+    
+        $user_id = $this->session->userdata('logged_in');
+        $data = json_decode(file_get_contents('php://input'), true);
+    
+        if ($this->User_model->update_user($user_id, $data)) {
+            $this->response([
+                'success' => true,
+                'message' => 'User updated successfully'
+            ], REST_Controller::HTTP_OK);
+        } else {
+            $this->response([
+                'success' => false,
+                'message' => 'Failed to update user'
+            ], REST_Controller::HTTP_INTERNAL_SERVER_ERROR);
+        }
+    }       
+    
 }
 ?>

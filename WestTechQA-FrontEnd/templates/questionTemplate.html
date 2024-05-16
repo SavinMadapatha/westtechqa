@@ -1,21 +1,27 @@
 <script type="text/template" id="question-template">
-    <% _.each(questions, function(question) { %>
-        <div class="question-item">
-            <div class="question-content-footer-wrapper">
-                <h3 class="question-title">
-                    <a href="#questions/<%= question.question_id %>" data-id="<%= question.question_id %>"><%= question.title %></a>
-                </h3>
-                <p class="question-content"><%= question.content %></p>
-                <footer class="question-footer">
-                    <div class="question-tags">
-                        <% _.each(question.tags, function(tag) { %>
-                            <a href="#questions/tag/<%= tag %>" class="question-tag" data-tag="<%= tag %>"><%= tag %></a>
-                        <% }); %>
-                    </div>
-                    <span class="question-user-date">by <strong><%= question.username %></strong> on <%= question.formattedDate %></span>
-                </footer>
+    <div class="tech-questions-header">
+        <h1 class="tech-questions-title">Tech Questions</h1>
+        <button id="tech-ask-question-btn" class="tech-ask-question-btn">Ask Question</button>
+    </div>
+    <div class="tech-questions-list">
+        <% _.each(questions, function(question) { %>
+            <div class="question-item">
+                <div class="question-content-footer-wrapper">
+                    <h3 class="question-title">
+                        <a href="#questions/<%= question.question_id %>" data-id="<%= question.question_id %>"><%= question.title %></a>
+                    </h3>
+                    <p class="question-content"><%= question.content %></p>
+                    <footer class="question-footer">
+                        <div class="question-tags">
+                            <% _.each(question.tags, function(tag) { %>
+                                <a href="#questions/tag/<%= tag %>" class="question-tag" data-tag="<%= tag %>"><%= tag %></a>
+                            <% }); %>
+                        </div>
+                        <span class="question-user-date">by <strong><%= question.username %></strong> on <%= question.formattedDate %></span>
+                    </footer>
+                </div>
+                <span class="question-answers-count"><%= question.answersCount %> Answers</span>
             </div>
-            <span class="question-answers-count"><%= question.answersCount %> Answers</span>
-        </div>
-    <% }); %>
+        <% }); %>
+    </div>
 </script>

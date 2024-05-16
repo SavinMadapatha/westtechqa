@@ -1,0 +1,16 @@
+<script type="text/template" id="profile-template">
+    <div class="profile-container">
+        <h1 class="profile-title">Profile Details</h1>
+        <div class="profile-details">
+            <% if (isEditing) { %>
+                <p><strong>Username:</strong> <input type="text" id="edit-username" value="<%= username %>"></p>
+            <% } else { %>
+                <p><strong>Username:</strong> <%= username %></p>
+            <% } %>
+            <p><strong>Email:</strong> <%= email %></p>
+            <p><strong>Registered Date:</strong> <%= registered_date %></p>
+        </div>
+        <button id="go-back-btn" class="profile-btn"><%= isEditing ? 'Cancel Edit' : 'Go Back' %></button>
+        <button id="edit-profile-btn" class="profile-btn"><%= isEditing ? 'Save Changes' : 'Edit Profile' %></button>
+    </div>
+</script>
