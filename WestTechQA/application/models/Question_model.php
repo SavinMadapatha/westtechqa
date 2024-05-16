@@ -83,7 +83,14 @@ class Question_model extends CI_Model {
         return $question;
     }    
 
-    // Add new question
+    public function get_question_by_id($id) {
+        $this->db->from('Question');
+        $this->db->where('question_id', $id);
+        $query = $this->db->get();
+        return $query->row_array();
+    }
+
+    // function to add a new question
     public function set_question($data) {
         $this->db->insert('Question', $data);
         return $this->db->insert_id(); 
@@ -95,9 +102,9 @@ class Question_model extends CI_Model {
         return $this->db->update('Question', $data);
     }
 
-    // Delete a question
+    // function for deleting a question
     public function delete_question($id) {
         $this->db->where('question_id', $id);
         return $this->db->delete('Question');
-    }
+    }    
 }

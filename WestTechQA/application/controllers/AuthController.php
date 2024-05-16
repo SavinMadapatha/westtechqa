@@ -28,7 +28,10 @@ class AuthController extends REST_Controller {
     
         if ($this->form_validation->run() === FALSE) {
             $this->output->set_status_header(400);
-            $this->response(['success' => false, 'message' => validation_errors()], REST_Controller::HTTP_BAD_REQUEST);
+            $this->response([
+                'success' => false, 
+                'message' => validation_errors()
+            ], REST_Controller::HTTP_BAD_REQUEST);
             return;
         }
     
@@ -44,10 +47,16 @@ class AuthController extends REST_Controller {
     
         // Insert user into the database
         if ($this->User_model->insert_user($userData)) {
-            $this->response(['success' => true, 'message' => 'Registration successful'], REST_Controller::HTTP_OK);
+            $this->response([
+                'success' => true, 
+                'message' => 'Registration successful'
+            ], REST_Controller::HTTP_OK);
         } else {
             $this->output->set_status_header(500);
-            $this->response(['success' => false, 'message' => 'Failed to register user'], REST_Controller::HTTP_INTERNAL_SERVER_ERROR);
+            $this->response([
+                'success' => false, 
+                'message' => 'Failed to register user'
+            ], REST_Controller::HTTP_INTERNAL_SERVER_ERROR);
         }
     }    
 
@@ -63,7 +72,10 @@ class AuthController extends REST_Controller {
 
         if ($this->form_validation->run() == FALSE) {
             $this->output->set_status_header(400); 
-            $this->response(['status' => 'error', 'message' => validation_errors()], REST_Controller::HTTP_BAD_REQUEST);
+            $this->response([
+                'status' => 'error', 
+                'message' => validation_errors()
+            ], REST_Controller::HTTP_BAD_REQUEST);
             return;
         }
 
@@ -76,10 +88,17 @@ class AuthController extends REST_Controller {
             // Set user session 
             $this->session->set_userdata('logged_in', $user['user_id']);
             
-            $this->response(['status' => 'success', 'message' => 'Login successful', 'user' => $user], REST_Controller::HTTP_OK);
+            $this->response([
+                'status' => 'success', 
+                'message' => 'Login successful', 
+                'user' => $user
+            ], REST_Controller::HTTP_OK);
         } else {
             $this->output->set_status_header(401); 
-            $this->response(['status' => 'error', 'message' => 'Login failed'], REST_Controller::HTTP_UNAUTHORIZED);
+            $this->response([
+                'status' => 'error', 
+                'message' => 'Login failed'
+            ], REST_Controller::HTTP_UNAUTHORIZED);
         }
     }
 
@@ -95,13 +114,19 @@ class AuthController extends REST_Controller {
                 'username' => $user['username'] 
             ], REST_Controller::HTTP_OK);
         } else {
-            $this->response(['status' => 'error', 'logged_in' => false], REST_Controller::HTTP_UNAUTHORIZED);
+            $this->response([
+                'status' => 'error', 
+                'logged_in' => false
+            ], REST_Controller::HTTP_UNAUTHORIZED);
         }
     }
 
     public function logout_post() {
         $this->session->sess_destroy();
-        $this->response(['status' => 'success', 'message' => 'Logged out successfully'], REST_Controller::HTTP_OK);
+        $this->response([
+            'status' => 'success', 
+            'message' => 'Logged out successfully'
+        ], REST_Controller::HTTP_OK);
     }
 
     // this function handles the password reset functionality
@@ -116,23 +141,34 @@ class AuthController extends REST_Controller {
         $this->form_validation->set_rules('new_password', 'New Password', 'required|min_length[6]');
     
         if ($this->form_validation->run() === FALSE) {
-            $this->response(['success' => false, 'message' => validation_errors()], REST_Controller::HTTP_BAD_REQUEST);
+            $this->response([
+                'success' => false, 
+                'message' => validation_errors()
+            ], REST_Controller::HTTP_BAD_REQUEST);
             return;
         }
     
         $user = $this->User_model->get_user_by_reset_info($data->username, $data->email, $data->joined_date);
         if (!$user) {
-            $this->response(['success' => false, 'message' => 'No matching user found.'], REST_Controller::HTTP_NOT_FOUND);
+            $this->response([
+                'success' => false, 
+                'message' => 'No matching user found.'
+            ], REST_Controller::HTTP_NOT_FOUND);
             return;
         }
     
         $hashedPassword = password_hash($data->new_password, PASSWORD_DEFAULT);
         if ($this->User_model->update_user_password($user->user_id, $hashedPassword)) {
-            $this->response(['success' => true, 'message' => 'Password reset successfully.'], REST_Controller::HTTP_OK);
+            $this->response([
+                'success' => true, 
+                'message' => 'Password reset successfully.'
+            ], REST_Controller::HTTP_OK);
         } else {
-            $this->response(['success' => false, 'message' => 'Failed to reset password.'], REST_Controller::HTTP_INTERNAL_SERVER_ERROR);
+            $this->response([
+                'success' => false, 
+                'message' => 'Failed to reset password.'
+            ], REST_Controller::HTTP_INTERNAL_SERVER_ERROR);
         }
-    }
-    
+    }    
 }
 ?>

@@ -14,6 +14,10 @@
         <div class="user-details">
             <img src="user.png" alt="Posted by" class="user">
             <span class="question-user"><strong><%= username %></strong></span>
+            <% if (isCreator) { %>
+                <img src="separator.png" alt="separator" class="separator">
+                <img src="delete.png" alt="Delete icon" class="delete-btn">
+            <% } %>
         </div>
     </div>
     <div class="question-detail-answers">

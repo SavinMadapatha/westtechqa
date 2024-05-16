@@ -22,7 +22,8 @@ var QuestionDetailView = Backbone.View.extend({
         'click .vote-up': 'incrementVote',
         'click .vote-down': 'decrementVote',
         'change .accept-answer': 'acceptAnswer',
-        'click .question-answer-content': 'navigateToAnswerDetail'
+        'click .question-answer-content': 'navigateToAnswerDetail',
+        'click .delete-btn': 'showDeleteConfirm'
     },
 
     askQuestion: function(event) {
@@ -162,6 +163,51 @@ var QuestionDetailView = Backbone.View.extend({
         var answerId = $(event.currentTarget).data('id');
         Backbone.history.navigate('answers/' + answerId, { trigger: true });
     },
+
+    showDeleteConfirm: function() {
+        var self = this;
+        var deleteModalHTML = `
+            <div class="delete-modal-overlay" id="delete-modal-overlay">
+                <div class="delete-modal">
+                    <span class="close-modal-btn">&#10005;</span> 
+                    <p class="alert-text">Are you sure you want to delete this question?</p>
+                    <button id="confirm-delete">Delete</button>
+                    <button id="cancel-delete">Cancel</button>
+                </div>
+            </div>
+        `;
+        $('body').append(deleteModalHTML);
+        $('#delete-modal-overlay').show();
+
+        $('#confirm-delete').on('click', function() {
+            self.deleteQuestion();
+        });
+
+        $('#cancel-delete, .close-modal-btn').on('click', function() {
+            self.closeDeletePrompt();
+        });
+    },
+
+    closeDeletePrompt: function() {
+        $('#delete-modal-overlay').remove();
+    },
+
+    deleteQuestion: function() {
+        var self = this;
+        $.ajax({
+            type: 'DELETE',
+            url: `http://localhost/WestTechQA/api/questions/delete/${this.questionId}`,
+            success: function(response) {
+                console.log("Question deleted successfully");
+                Backbone.history.navigate('questions', {trigger: true});
+                self.closeDeletePrompt();
+            },
+            error: function() {
+                console.log("Failed to delete the question");
+                self.closeDeletePrompt();
+            }
+        });
+    },    
 
     render: function() {
         if (!this.template) {

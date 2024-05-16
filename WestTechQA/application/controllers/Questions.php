@@ -22,7 +22,9 @@ class Questions extends REST_Controller {
     public function getQuestion_get($id = NULL) {
         $question = $this->question_model->get_question_with_details($id);
         if (!$question) {
-            $this->response(['message' => 'Question not found'], REST_Controller::HTTP_NOT_FOUND);
+            $this->response([
+                'message' => 'Question not found'
+            ], REST_Controller::HTTP_NOT_FOUND);
         } else {
             $this->response($question, REST_Controller::HTTP_OK);
         }
@@ -30,7 +32,9 @@ class Questions extends REST_Controller {
 
     public function postQuestion_post() {
         if (!$this->session->userdata('logged_in')) {
-            $this->response(['success' => false, 'error' => 'Unauthorized'], REST_Controller::HTTP_UNAUTHORIZED);
+            $this->response([
+                'success' => false, 'error' => 'Unauthorized'
+            ], REST_Controller::HTTP_UNAUTHORIZED);
             return;
         }
     
@@ -45,11 +49,39 @@ class Questions extends REST_Controller {
                 $tag_id = $this->tag_model->ensureTagExists($tag);
                 $this->tag_model->linkTagToQuestion($tag_id, $question_id); 
             }
-            $this->response(['success' => true, 'message' => 'Question created successfully', 'question_id' => $question_id], REST_Controller::HTTP_CREATED);
+            $this->response([
+                'success' => true, 
+                'message' => 'Question created successfully', 
+                'question_id' => $question_id
+            ], REST_Controller::HTTP_CREATED);
         } else {
             $this->response(['success' => false, 'error' => 'Failed to create question'], REST_Controller::HTTP_BAD_REQUEST);
         }
     }
+
+    // this function handles the deletion of a question
+    public function deleteQuestion_delete($id) {
+        $question = $this->question_model->get_question_by_id($id);
+        if (!$question) {
+            $this->response([
+                'success' => false,
+                'message' => 'Question not found'
+            ], REST_Controller::HTTP_NOT_FOUND);
+            return;
+        }
     
+        $deleted = $this->question_model->delete_question($id);
+        if ($deleted) {
+            $this->response([
+                'success' => true,
+                'message' => 'Question deleted successfully'
+            ], REST_Controller::HTTP_OK);
+        } else {
+            $this->response([
+                'success' => false,
+                'message' => 'Failed to delete question'
+            ], REST_Controller::HTTP_INTERNAL_SERVER_ERROR);
+        }
+    }
 }
 ?>

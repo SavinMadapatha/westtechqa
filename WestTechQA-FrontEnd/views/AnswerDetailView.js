@@ -18,30 +18,59 @@ var AnswerDetailView = Backbone.View.extend({
         "click .btn-add-comment": "postComment"
     },
 
+    showLoginPrompt: function() {
+        var self = this; 
+        var loginModalHTML = `
+            <div class="login-modal-overlay" id="login-modal-overlay">
+                <div class="login-modal">
+                    <span class="close-modal-btn">&#10005;</span> 
+                    <p class="alert-text">You have to login to post comments!</p>
+                    <button id="go-to-login">Login</button>
+                </div>
+            </div>
+        `;
+        $('body').append(loginModalHTML);
+        $('#login-modal-overlay').show();
+    
+        $('#go-to-login').on('click', function() {
+            Backbone.history.navigate('login', {trigger: true});
+            $('#login-modal-overlay').remove(); 
+        });
+        $('.close-modal-btn').on('click', function() {
+            $('#login-modal-overlay').remove(); 
+        });
+    },
+
     postComment: function() {
         var commentContent = this.$('.comment-input').val().trim();
         console.log(this.answerId, commentContent);
-        if (commentContent) {
-            $.ajax({
-                type: 'POST',
-                url: 'http://localhost/WestTechQA/api/comments/addComment',
-                data: { answer_id: this.answerId, content: commentContent },
-                success: function(response) {
-                    if (response.success) {
-                        console.log('Comment added successfully');
-                        this.model.fetch();  
-                    } else {
-                        console.log('Error adding comment: ' + (response.error || 'Unknown error!'));
-                    }
-                }.bind(this),
-                error: function() {
-                    console.log('Failed to connect to the server.');
-                },
-                dataType: 'json'
-            });
-        } else {
-            console.log('Please enter a comment');
-        }
+        checkLoginStatus((isLoggedIn) => { 
+            if (isLoggedIn) {
+                if (commentContent) {
+                    $.ajax({
+                        type: 'POST',
+                        url: 'http://localhost/WestTechQA/api/comments/addComment',
+                        data: { answer_id: this.answerId, content: commentContent },
+                        success: function(response) {
+                            if (response.success) {
+                                console.log('Comment added successfully');
+                                this.model.fetch();  
+                            } else {
+                                console.log('Error adding comment: ' + (response.error || 'Unknown error!'));
+                            }
+                        }.bind(this), 
+                        error: function() {
+                            console.log('Failed to connect to the server.');
+                        },
+                        dataType: 'json'
+                    });
+                } else {
+                    console.log('Please enter a comment');
+                }
+            } else {
+                this.showLoginPrompt();  
+            }
+        });
     },
 
     render: function() {
