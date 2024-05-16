@@ -63,6 +63,7 @@ $route['api/questions'] = 'questions/allQuestions';
 $route['api/questions/(:num)'] = 'questions/getQuestion/$1';
 $route['api/questions/addQuestion'] = 'questions/postQuestion';
 $route['api/questions/delete/(:num)'] = 'questions/deleteQuestion/$1';
+$route['api/questions/update/(:num)'] = 'questions/updateQuestion/$1';
 $route['api/answers/addAnswer'] = 'answers/postAnswer';
 $route['api/answers/(:num)/details'] = 'answers/getQuestion/$1';
 $route['api/answers/incrementVote/(:num)'] = 'answers/incrementVote/$1';

@@ -39,8 +39,15 @@ var LoginView = Backbone.View.extend({
     events: {
         'submit #login-form': 'login',
         'click #password-reset-link': 'showResetForm',
-        'submit #password-reset-form': 'resetPassword' 
+        'submit #password-reset-form': 'resetPassword',
+         'click #goback-login-link': 'showLogin'
     },
+
+    showLogin: function(e) {
+        e.preventDefault();
+        window.location.reload();
+    },
+
 
     login: function(e) {
         e.preventDefault();

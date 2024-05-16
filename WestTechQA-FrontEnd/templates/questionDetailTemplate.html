@@ -1,46 +1,60 @@
 <script type="text/template" id="question-detail-template">
     <div class="question-detail-header">
-        <h1 class="question-detail-title"><%= title %></h1>
-        <button id="ask-question-btn">Ask Question</button>
+        <% if (!isEditing) { %>
+            <h1 class="question-detail-title"><%= title %></h1>
+            <button id="ask-question-btn">Ask Question</button>
+        <% } %>
     </div>
-    <span class="question-posted-date">posted on <%= formattedDate %></span>
-    <p class="question-detail-content"><%= content %></p>
-    <div class="question-detail-footer">
-        <div class="question-tags">
-            <% _.each(tags, function(tag) { %>
-                <span class="question-tag"><%= tag %></span>
+    <% if (isEditing) { %>
+        <label class="edit-question-title-label" for="edit-title">Title:</label>
+        <input type="text" class="question-detail-title-edit" id="edit-title" value="<%= title %>"/>
+        <label class="edit-content-label" for="edit-content-label">Content:</label>
+        <textarea class="question-detail-content-edit" id="edit-content"><%= content %></textarea>
+        <div class="edit-buttons">
+            <button id="cancel-edit-btn">Go Back</button>
+            <button id="save-changes-btn">Save Changes</button>
+        </div>
+    <% } else { %>
+        <span class="question-posted-date">posted on <%= formattedDate %></span>
+        <p class="question-detail-content"><%= content %></p>
+        <div class="question-detail-footer">
+            <div class="question-tags">
+                <% _.each(tags, function(tag) { %>
+                    <span class="question-tag"><%= tag %></span>
+                <% }); %>
+            </div>
+            <div class="user-details">
+                <img src="user.png" alt="Posted by" class="user">
+                <span class="question-user"><strong><%= username %></strong></span>
+                <% if (isCreator) { %>
+                    <img src="separator.png" alt="separator" class="separator">
+                    <img src="edit.png" alt="Edit icon" class="edit-question-btn">
+                    <img src="delete.png" alt="Delete icon" class="delete-btn">
+                <% } %>
+            </div>
+        </div>
+        <div class="question-detail-answers">
+            <div class="answers-header">
+                <h2><%= answersCount %> Answers</h2>
+                <button id="add-answer-btn">Add Answer</button>
+            </div>
+            <% _.each(answers, function(answer) { %>
+                <div class="question-answer-item">
+                    <% if (answer.accepted === "1" || (isCreator && !isAnyAnswerAccepted)) { %>
+                        <input type="checkbox" class="accept-answer" data-id="<%= answer.answer_id %>"
+                               <%= answer.accepted === "1" ? 'checked disabled' : '' %>/>
+                    <% } %>
+                    <div class="answer-content">
+                        <p class="question-answer-content" data-id="<%= answer.answer_id %>"><%= answer.content %></p>
+                        <p class="question-answer-info">answered by <strong><%= answer.username %></strong> on <%= answer.formattedDate %></p>
+                    </div>
+                    <div class="vote-section">
+                        <button class="vote-up" data-id="<%= answer.answer_id %>">&#9650;</button>
+                        <span class="vote-count"><%= answer.votes %></span>
+                        <button class="vote-down" data-id="<%= answer.answer_id %>">&#9660;</button>
+                    </div>
+                </div>
             <% }); %>
         </div>
-        <div class="user-details">
-            <img src="user.png" alt="Posted by" class="user">
-            <span class="question-user"><strong><%= username %></strong></span>
-            <% if (isCreator) { %>
-                <img src="separator.png" alt="separator" class="separator">
-                <img src="delete.png" alt="Delete icon" class="delete-btn">
-            <% } %>
-        </div>
-    </div>
-    <div class="question-detail-answers">
-        <div class="answers-header">
-            <h2><%= answersCount %> Answers</h2>
-            <button id="add-answer-btn">Add Answer</button>
-        </div>
-        <% _.each(answers, function(answer) { %>
-            <div class="question-answer-item">
-                <% if (answer.accepted === "1" || (isCreator && !isAnyAnswerAccepted)) { %>
-                    <input type="checkbox" class="accept-answer" data-id="<%= answer.answer_id %>"
-                           <%= answer.accepted === "1" ? 'checked disabled' : '' %>/>
-                <% } %>
-                <div class="answer-content">
-                    <p class="question-answer-content" data-id="<%= answer.answer_id %>"><%= answer.content %></p>
-                    <p class="question-answer-info">answered by <strong><%= answer.username %></strong> on <%= answer.formattedDate %></p>
-                </div>
-                <div class="vote-section">
-                    <button class="vote-up" data-id="<%= answer.answer_id %>">&#9650;</button>
-                    <span class="vote-count"><%= answer.votes %></span>
-                    <button class="vote-down" data-id="<%= answer.answer_id %>">&#9660;</button>
-                </div>
-            </div>
-        <% }); %>
-    </div>
+    <% } %>
 </script>

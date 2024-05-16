@@ -362,6 +362,22 @@ main {
   text-decoration: underline;
 }
 
+.goback-login {
+  position: relative;
+  margin-top: 510px;
+  margin-left: 560px;
+}
+
+.goback-login a {
+  color: #007bff;
+  text-decoration: none;
+}
+
+.goback-login a:hover {
+  color: #007bff;
+  text-decoration: underline;
+}
+
 /* questions list (home page) styles */
 * {
   margin: 0;
@@ -557,6 +573,18 @@ header h1 {
   margin-right: 15px;
 }
 
+.edit-question-btn {
+  width: 25px;
+  height: 25px;
+  margin-right: 20px;
+  cursor: pointer;
+  transition: transform 0.3s ease-in-out;
+}
+
+.edit-question-btn:hover {
+  transform: scale(1.1);
+}
+
 .delete-btn {
   width: 25px;
   height: 25px;
@@ -567,6 +595,76 @@ header h1 {
 
 .delete-btn:hover {
   transform: scale(1.1);
+}
+
+.edit-question-title-label label,
+.question-detail-title-edit label {
+  display: block;
+  font-size: 20px;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 5px;
+}
+
+.edit-question-title-label {
+  font-weight: bold;
+}
+
+.edit-content-label {
+  font-weight: bold;
+}
+
+.question-detail-title-edit,
+.question-detail-content-edit {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 16px;
+  box-sizing: border-box;
+}
+
+.question-detail-title-edit {
+  font-size: 34px;
+  margin-bottom: 10px;
+}
+
+.question-detail-content-edit {
+  min-height: 150px;
+  font-size: 16px;
+}
+
+.edit-buttons {
+  display: inline;
+  justify-content: space-between;
+}
+
+#cancel-edit-btn {
+  margin-top: 10px;
+  padding: 8px 16px;
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+#save-changes-btn {
+  margin-top: 10px;
+  padding: 8px 16px;
+  background-color: #28a745;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+#cancel-edit-btn:hover {
+  background-color: #c82333;
+}
+
+#save-changes-btn:hover {
+  background-color: #218838;
 }
 
 .question-detail-answers {

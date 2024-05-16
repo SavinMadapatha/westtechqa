@@ -59,6 +59,29 @@ class Questions extends REST_Controller {
         }
     }
 
+    // // this function handles the updates of a question
+    public function updateQuestion_put($id) {
+        if (!$this->session->userdata('logged_in')) {
+            $this->response([
+                'success' => false, 'error' => 'Unauthorized'
+            ], REST_Controller::HTTP_UNAUTHORIZED);
+            return;
+        }
+
+        $data = json_decode(file_get_contents('php://input'), true);
+        if ($this->question_model->update_question($id, $data)) {
+            $this->response([
+                'success' => true, 
+                'message' => 'Question updated successfully'
+            ], REST_Controller::HTTP_OK);
+        } else {
+            $this->response([
+                'success' => false, 
+                'message' => 'Failed to update question'
+            ], REST_Controller::HTTP_BAD_REQUEST);
+        }
+    }
+
     // this function handles the deletion of a question
     public function deleteQuestion_delete($id) {
         $question = $this->question_model->get_question_by_id($id);

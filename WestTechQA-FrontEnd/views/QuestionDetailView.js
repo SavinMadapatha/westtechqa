@@ -3,6 +3,7 @@ var QuestionDetailView = Backbone.View.extend({
         this.questionId = options.questionId;
         this.model = new QuestionDetailModel({ id: this.questionId });
         this.template = null;
+        this.isEditing = false;
         
         var self = this;
         $.get('templates/questionDetailTemplate.html').done(function(data) {
@@ -23,7 +24,10 @@ var QuestionDetailView = Backbone.View.extend({
         'click .vote-down': 'decrementVote',
         'change .accept-answer': 'acceptAnswer',
         'click .question-answer-content': 'navigateToAnswerDetail',
-        'click .delete-btn': 'showDeleteConfirm'
+        'click .delete-btn': 'showDeleteConfirm',
+        'click .edit-question-btn': 'toggleEdit',
+        'click #save-changes-btn': 'saveChanges',
+        'click #cancel-edit-btn': 'cancelEdit'
     },
 
     askQuestion: function(event) {
@@ -164,6 +168,39 @@ var QuestionDetailView = Backbone.View.extend({
         Backbone.history.navigate('answers/' + answerId, { trigger: true });
     },
 
+    toggleEdit: function() {
+        this.isEditing = !this.isEditing;
+        this.render();
+    },
+
+    cancelEdit: function() {
+        this.isEditing = false;
+        this.render();
+    },
+
+    saveChanges: function() {
+        var self = this;
+        var updatedTitle = this.$('.question-detail-title-edit').val();
+        var updatedContent = this.$('.question-detail-content-edit').val();
+        
+        $.ajax({
+            type: 'PUT',
+            url: `http://localhost/WestTechQA/api/questions/update/${this.questionId}`,
+            data: JSON.stringify({ title: updatedTitle, content: updatedContent }),
+            contentType: 'application/json',
+            success: function(response) {
+                console.log("Question updated successfully");
+                self.isEditing = false;
+                self.model.set({title: updatedTitle, content: updatedContent});
+                self.model.trigger('change'); 
+                self.render(); 
+            },
+            error: function(response) {
+                console.error("Failed to update the question");
+            }
+        });
+    },
+
     showDeleteConfirm: function() {
         var self = this;
         var deleteModalHTML = `
@@ -216,6 +253,7 @@ var QuestionDetailView = Backbone.View.extend({
         }
     
         var data = this.model.toJSON();
+        data.isEditing = this.isEditing;
         console.log(data);
     
         data.formattedDate = new Date(data.posted_date.replace(' ', 'T') + 'Z').toLocaleDateString();
