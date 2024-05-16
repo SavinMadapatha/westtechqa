@@ -55,6 +55,15 @@ class Answers extends REST_Controller {
         $data['question_id'] = $this->post('question_id');
         $data['content'] = $this->post('content');
     
+        // Checking if the question_id already exists
+        if (!$this->question_model->isQuestionExist($data['question_id'])) {
+            $this->response([
+                'success' => false,
+                'error' => 'Question does not exist'
+            ], REST_Controller::HTTP_NOT_FOUND);
+            return;
+        }
+    
         if ($answer_id = $this->answer_model->set_answer($data)) {
             $this->response([
                 'success' => true, 
@@ -68,6 +77,7 @@ class Answers extends REST_Controller {
             ], REST_Controller::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
+    
     
 
     // this function receives the data related to a new comment for an answer and saves the comment in the db

@@ -12,6 +12,7 @@ class Questions extends REST_Controller {
         $this->load->helper('url');
     }
 
+    // retrieves all the questions
     public function allQuestions_get() {
         $search = $this->get('search');
         $tag = $this->get('tag');  
@@ -19,6 +20,7 @@ class Questions extends REST_Controller {
         $this->response($questions, REST_Controller::HTTP_OK);
     }
 
+    // retrieves a question with details based on given id
     public function getQuestion_get($id = NULL) {
         $question = $this->question_model->get_question_with_details($id);
         if (!$question) {
@@ -30,6 +32,7 @@ class Questions extends REST_Controller {
         }
     }
 
+    // this function handles the post question functionality
     public function postQuestion_post() {
         if (!$this->session->userdata('logged_in')) {
             $this->response([
@@ -43,11 +46,27 @@ class Questions extends REST_Controller {
         $tags = isset($data['tags']) ? $data['tags'] : [];
         unset($data['tags']);
     
+        $mandatoryFields = ['title', 'content'];  
+    
+        $emptyFields = array_filter($mandatoryFields, function($field) use ($data) {
+            return empty($data[$field]);
+        });
+    
+        // Checking if there are any empty mandatory fields
+        if (!empty($emptyFields)) {
+            $this->response([
+                'success' => false, 
+                'message' => 'Missing or empty required fields',
+                'missing_fields' => $emptyFields
+            ], REST_Controller::HTTP_BAD_REQUEST);
+            return;
+        }
+    
         if ($question_id = $this->question_model->set_question($data)) {
             $this->load->model('tag_model');
             foreach ($tags as $tag) {
                 $tag_id = $this->tag_model->ensureTagExists($tag);
-                $this->tag_model->linkTagToQuestion($tag_id, $question_id); 
+                $this->tag_model->linkTagToQuestion($tag_id, $question_id);
             }
             $this->response([
                 'success' => true, 
@@ -57,9 +76,10 @@ class Questions extends REST_Controller {
         } else {
             $this->response(['success' => false, 'error' => 'Failed to create question'], REST_Controller::HTTP_BAD_REQUEST);
         }
-    }
+    }    
+    
 
-    // // this function handles the updates of a question
+    // this function handles the updates of a question
     public function updateQuestion_put($id) {
         if (!$this->session->userdata('logged_in')) {
             $this->response([

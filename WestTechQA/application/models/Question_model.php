@@ -81,6 +81,12 @@ class Question_model extends CI_Model {
 
     
         return $question;
+    }   
+    
+    public function isQuestionExist($question_id) {
+        $this->db->where('question_id', $question_id);
+        $query = $this->db->get('Question');
+        return $query->num_rows() > 0;
     }    
 
     public function get_question_by_id($id) {
